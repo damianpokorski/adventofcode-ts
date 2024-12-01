@@ -1,0 +1,21 @@
+{
+    "jestrunner.jestCommand": "npm run test --",
+    "search.useIgnoreFiles": true,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": false,
+        "editor.codeActionsOnSave": {
+            "source.addMissingImports.ts": "never",
+            "source.fixAll.eslint": "always",
+            "source.fixAll.ts": "always",
+            "source.fixAll": "always",
+            "source.organizeImports": "always",
+            "source.removeUnused.ts": "never",
+            "source.removeUnused": "never",
+            "source.sortImports": "always",
+            "source.removeUnusedImports": "never"
+        },
+    },
+}
