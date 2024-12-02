@@ -1,5 +1,5 @@
-import { register } from '../registry';
 import '../utils';
+import { registerUsingFilename } from '../utils/registry';
 
 const validate = (row: number[]) => {
   // Get diffs
@@ -9,7 +9,7 @@ const validate = (row: number[]) => {
     })
     .filter((value) => value !== undefined);
 
-  // Counts entries
+  // Count entries
   const positive = deltas.filter((value) => value > 0).length;
   const negatives = deltas.filter((value) => value < 0).length;
   const outsideOfSafeRange = deltas.filter(
@@ -20,19 +20,19 @@ const validate = (row: number[]) => {
   const errors =
     deltas.length - Math.max(positive, negatives) + outsideOfSafeRange;
 
-  return errors < 1;
+  return errors == 0;
 };
 
 const validateSubsetsByDroppingOneEntry = (row: number[]) => {
   for (let i = 0; i < row.length; i++) {
-    if (validate(row.filter((value, index) => index !== i))) {
+    if (validate(row.filter((_, index) => index !== i))) {
       return true;
     }
   }
   return false;
 };
 
-register(2024, 2, async (part, input) => {
+registerUsingFilename(__filename, async (part, input) => {
   const data = input
     .map((row) => row.split(' '))
     .map((row) => row.map((value) => parseInt(value)))

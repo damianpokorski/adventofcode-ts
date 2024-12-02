@@ -1,16 +1,17 @@
 import { Argument, program } from 'commander';
-import { existsSync, readFileSync } from 'fs';
-import './2024';
-import { Days, getRegistryItems, Part, Years } from './registry';
-export * from './registry';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import './solvers';
+import { Days, getRegistryItems, Part, Years } from './utils';
+export * from './utils/registry';
 
 export const command = (command: string[]) => {
   return program
-    .command('adventofcode')
+    .name('adventofcode')
+    .command('solve')
     .description('Begins solving specific advent of code issue')
     .addArgument(
       new Argument('<year>', 'Year to pick puzzles from')
-        .choices(['2024'])
+        .choices(['2023', '2024'])
         .argOptional()
     )
     .addArgument(
@@ -42,10 +43,11 @@ export const command = (command: string[]) => {
 
       // Iterate through all solutions
       for (const [year, day, solution] of puzzles) {
-        const path = `./.input/${year}/${day}.txt`;
+        const path = `./.input/${year}${day.toString().padStart(2, '0')}.txt`;
 
         if (!existsSync(path)) {
-          console.error(`No puzzle file found in: ${path}`);
+          console.error(`No puzzle file found in: ${path} creating empty`);
+          writeFileSync(path, '', { encoding: 'utf-8' });
           continue;
         }
         const data = readFileSync(path, { encoding: 'utf-8' }).split('\n');

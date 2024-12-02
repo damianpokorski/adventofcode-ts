@@ -1,4 +1,7 @@
-export type Years = 2024 | '.';
+import { basename } from 'path';
+
+export type Years = 2023 | 2024 | '.';
+
 export type Days =
   | 1
   | 2
@@ -26,6 +29,7 @@ export type Days =
   | 24
   | 25
   | '.';
+
 export type Part = 1 | 2 | '.';
 
 export type Solution = (part: Part, input: string[]) => Promise<string>;
@@ -33,6 +37,7 @@ export type Solution = (part: Part, input: string[]) => Promise<string>;
 /** Naughty global state for convenient */
 export const registry = {} as Record<Years, Record<Days, Solution>>;
 
+/** Registers new puzzle */
 export const register = (
   year: Years,
   day: Days,
@@ -44,6 +49,25 @@ export const register = (
   // Add day entry
   registry[year][day] = solution;
   return solution;
+};
+
+export const filenameToYear = (filename: string) =>
+  parseInt(basename(filename).substring(0, 4)) as Years;
+export const filenameToDay = (filename: string) =>
+  parseInt(basename(filename).substring(4, 6)) as Days;
+
+export const registerUsingFilename = (filename: string, solution: Solution) => {
+  return register(filenameToYear(filename), filenameToDay(filename), solution);
+};
+
+export const findUsingFilename = (filename: string): Solution => {
+  const year = filenameToYear(filename);
+  const day = filenameToDay(filename);
+  const match = registry[year] && registry[year][day];
+  if (!match) {
+    throw new Error(`Failed to find puzzle using filename ${filename}`);
+  }
+  return match;
 };
 
 export const execute = async (

@@ -1,7 +1,7 @@
-import { register } from '../registry';
 import '../utils';
+import { registerUsingFilename } from '../utils/registry';
 
-register(2024, 1, async (part, input) => {
+registerUsingFilename(__filename, async (part, input) => {
   const parsed = input
     .map((line) => line.split('   '))
     .map(([a, b]) => [parseInt(a), parseInt(b)]) as [number, number][];
