@@ -46,6 +46,7 @@ export const command = (command: string[]) => {
 
         if (!existsSync(path)) {
           console.error(`No puzzle file found in: ${path}`);
+          continue;
         }
         const data = readFileSync(path, { encoding: 'utf-8' }).split('\n');
 
