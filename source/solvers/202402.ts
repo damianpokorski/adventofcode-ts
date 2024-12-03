@@ -1,5 +1,5 @@
 import '../utils';
-import { registerUsingFilename } from '../utils/registry';
+import { addTest, initialize } from '../utils/registry';
 
 const validate = (row: number[]) => {
   // Get diffs
@@ -12,13 +12,10 @@ const validate = (row: number[]) => {
   // Count entries
   const positive = deltas.filter((value) => value > 0).length;
   const negatives = deltas.filter((value) => value < 0).length;
-  const outsideOfSafeRange = deltas.filter(
-    (value) => ![1, 2, 3].includes(Math.abs(value))
-  ).length;
+  const outsideOfSafeRange = deltas.filter((value) => ![1, 2, 3].includes(Math.abs(value))).length;
 
   // Biggest set - full deltas = number of invalid entries
-  const errors =
-    deltas.length - Math.max(positive, negatives) + outsideOfSafeRange;
+  const errors = deltas.length - Math.max(positive, negatives) + outsideOfSafeRange;
 
   return errors == 0;
 };
@@ -32,14 +29,20 @@ const validateSubsetsByDroppingOneEntry = (row: number[]) => {
   return false;
 };
 
-registerUsingFilename(__filename, async (part, input) => {
+initialize(__filename, async (part, input) => {
   const data = input
     .map((row) => row.split(' '))
     .map((row) => row.map((value) => parseInt(value)))
-    .filter(
-      (row) =>
-        validate(row) || (part == 2 && validateSubsetsByDroppingOneEntry(row))
-    );
+    .filter((row) => validate(row) || (part == 2 && validateSubsetsByDroppingOneEntry(row)));
 
   return data.length.toString();
 });
+
+const data = `7 6 4 2 1
+1 2 7 8 9
+9 7 6 2 1
+1 3 2 4 5
+8 6 4 4 1
+1 3 6 7 9`.split('\n');
+addTest(__filename, 1, data, '2');
+addTest(__filename, 2, data, '4');

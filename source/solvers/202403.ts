@@ -1,7 +1,7 @@
 import '../utils';
-import { registerUsingFilename } from '../utils/registry';
+import { initialize } from '../utils/registry';
 
-registerUsingFilename(__filename, async (part, input) => {
+initialize(__filename, async (part, input) => {
   // Challenged myself to do this one without creating any variables directly
   return (
     part == 1

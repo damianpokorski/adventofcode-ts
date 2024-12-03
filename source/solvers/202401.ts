@@ -1,10 +1,11 @@
 import '../utils';
-import { registerUsingFilename } from '../utils/registry';
+import { addTest, initialize } from '../utils/registry';
 
-registerUsingFilename(__filename, async (part, input) => {
-  const parsed = input
-    .map((line) => line.split('   '))
-    .map(([a, b]) => [parseInt(a), parseInt(b)]) as [number, number][];
+initialize(__filename, async (part, input) => {
+  const parsed = input.map((line) => line.split('   ')).map(([a, b]) => [parseInt(a), parseInt(b)]) as [
+    number,
+    number
+  ][];
 
   const left = parsed.map((input) => input[0]).sort();
   const right = parsed.map((input) => input[1]).sort();
@@ -22,3 +23,12 @@ registerUsingFilename(__filename, async (part, input) => {
     .reduce((a, b) => a + b, 0)
     .toString();
 });
+
+const testData = `3   4
+4   3
+2   5
+1   3
+3   9
+3   3`.split(`\n`);
+addTest(__filename, 1, testData, '11');
+addTest(__filename, 2, testData, '31');

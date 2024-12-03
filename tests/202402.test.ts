@@ -1,23 +1,14 @@
-import * as puzzles from '../source/index';
+import { findTestUsingFilename, findUsingFilename } from '../source';
 
-const data = `7 6 4 2 1
-1 2 7 8 9
-9 7 6 2 1
-1 3 2 4 5
-8 6 4 4 1
-1 3 6 7 9`.split('\n');
-const year = 2024;
-const day = 2;
-
-describe('2024/02', () => {
-  const part1 = (data: string[]) => puzzles.execute(year, day, 1, data);
-  const part2 = (data: string[]) => puzzles.execute(year, day, 2, data);
+describe(`2024/02`, () => {
+  const solver = findUsingFilename(__filename);
 
   it('Part 1', async function () {
-    expect(await part1(data)).toEqual('2');
+    const [input, result] = findTestUsingFilename(__filename, 1);
+    expect(await solver(1, input)).toEqual(result);
   });
-
   it('Part 2', async function () {
-    expect(await part2(data)).toEqual('4');
+    const [input, result] = findTestUsingFilename(__filename, 2);
+    expect(await solver(2, input)).toEqual(result);
   });
 });

@@ -1,7 +1,7 @@
 import '../utils';
-import { registerUsingFilename } from '../utils/registry';
+import { addTest, initialize } from '../utils/registry';
 
-registerUsingFilename(__filename, async (part, input) => {
+initialize(__filename, async (part, input) => {
   // Regex check for digit
   const hasNumber = (x: string) => /\d/g.test(x);
 
@@ -38,3 +38,11 @@ registerUsingFilename(__filename, async (part, input) => {
     .sum()
     .toString();
 });
+
+addTest(__filename, 1, [`1abc2`, `pqr3stu8vwx`, `a1b2c3d4e5f`, `treb7uchet`], '142');
+addTest(
+  __filename,
+  2,
+  [`two1nine`, `eightwothree`, `abcone2threexyz`, `xtwone3four`, `4nineeightseven2`, `zoneight234`, `7pqrstsixteen`],
+  '281'
+);
