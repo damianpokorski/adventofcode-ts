@@ -1,5 +1,5 @@
 import '../utils';
-import { addTest, initialize } from '../utils/registry';
+import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   const parsed = input.map((line) => line.split('   ')).map(([a, b]) => [parseInt(a), parseInt(b)]) as [
@@ -22,13 +22,6 @@ initialize(__filename, async (part, input) => {
     .map((a) => a * right.filter((b) => a == b).length)
     .reduce((a, b) => a + b, 0)
     .toString();
-});
-
-const testData = `3   4
-4   3
-2   5
-1   3
-3   9
-3   3`.split(`\n`);
-addTest(__filename, 1, testData, '11');
-addTest(__filename, 2, testData, '31');
+})
+  .test(1, [`3   4`, `4   3`, `2   5`, `1   3`, `3   9`, `3   3`], '11')
+  .test(2, [`3   4`, `4   3`, `2   5`, `1   3`, `3   9`, `3   3`], '31');

@@ -18,7 +18,7 @@ declare global {
     /**
      * Sums up an array of numbers using reduction
      */
-    sum<T extends Number>(): T;
+    sum<T extends number>(): T;
   }
 
   interface String {
@@ -47,7 +47,7 @@ if (!Array.prototype.zip) {
 }
 
 if (!Array.prototype.sum) {
-  Array.prototype.sum = function <T extends Number>() {
-    return this.reduce((a, b) => a + b, 0);
+  Array.prototype.sum = function <T extends number>() {
+    return this.reduce((a, b) => a + b, 0) as T;
   };
 }

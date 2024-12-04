@@ -18,7 +18,10 @@ declare global {
 
 if (!String.prototype.massReplace) {
   String.prototype.massReplace = function (replaces) {
-    const result = Object.entries(replaces).reduce((value, pair) => value.split(pair[0]).join(pair[1]), `${this}`);
+    const result = Object.entries(replaces).reduce(
+      (value, pair) => value.split(pair[0]).join(pair[1]),
+      `${this}`
+    );
 
     return result;
   };

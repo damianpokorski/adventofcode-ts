@@ -8,14 +8,5 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   ...tseslint.configs.stylistic,
-  prettierPluginRecommended,
-  {
-    "prettier/prettier": [
-      "error",
-      {},
-      {
-        "usePrettierrc": false
-      }
-    ]
-  }
+  prettierPluginRecommended
 );

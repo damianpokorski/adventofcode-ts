@@ -1,5 +1,5 @@
 import '../utils';
-import { addTest, initialize } from '../utils/registry';
+import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   // Regex check for digit
@@ -30,19 +30,25 @@ initialize(__filename, async (part, input) => {
     );
 
   return input
-    .map((line, index) => {
-      let first = getFirstDigit(line.substringFind((x) => hasNumber(parse(x))) ?? '');
-      let last = getFirstDigit(line.substringFind((x) => hasNumber(parse(x)), 'rtl') ?? '');
+    .map((line) => {
+      const first = getFirstDigit(line.substringFind((x) => hasNumber(parse(x))) ?? '');
+      const last = getFirstDigit(line.substringFind((x) => hasNumber(parse(x)), 'rtl') ?? '');
       return parseInt(`${first ?? last}${last ?? first}`);
     })
     .sum()
     .toString();
-});
-
-addTest(__filename, 1, [`1abc2`, `pqr3stu8vwx`, `a1b2c3d4e5f`, `treb7uchet`], '142');
-addTest(
-  __filename,
-  2,
-  [`two1nine`, `eightwothree`, `abcone2threexyz`, `xtwone3four`, `4nineeightseven2`, `zoneight234`, `7pqrstsixteen`],
-  '281'
-);
+})
+  .test(1, [`1abc2`, `pqr3stu8vwx`, `a1b2c3d4e5f`, `treb7uchet`], '142')
+  .test(
+    2,
+    [
+      `two1nine`,
+      `eightwothree`,
+      `abcone2threexyz`,
+      `xtwone3four`,
+      `4nineeightseven2`,
+      `zoneight234`,
+      `7pqrstsixteen`
+    ],
+    '281'
+  );

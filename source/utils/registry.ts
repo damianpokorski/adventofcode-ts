@@ -50,10 +50,6 @@ export const register = (year: Years, day: Days, solution: Solution): Solution =
 export const filenameToYear = (filename: string) => parseInt(basename(filename).substring(0, 4)) as Years;
 export const filenameToDay = (filename: string) => parseInt(basename(filename).substring(4, 6)) as Days;
 
-export const initialize = (filename: string, solution: Solution) => {
-  return register(filenameToYear(filename), filenameToDay(filename), solution);
-};
-
 export const findUsingFilename = (filename: string): Solution => {
   const year = filenameToYear(filename);
   const day = filenameToDay(filename);
@@ -114,14 +110,6 @@ export const execute = async (year: Years, day: Days, part: Part, input: string[
     throw new Error(`No solutions registered for year/day: ${year}/${day}`);
   }
 
-  // Execute test if available
-  if (testRegistry[year] && testRegistry[year][day] && testRegistry[year][day][part]) {
-    const [testInput, expectedResult] = testRegistry[year][day][part];
-    const testResult = await registry[year][day](part, testInput);
-    if (testResult !== expectedResult) {
-    }
-  }
-
   // Execute & Return particular solution
   return await registry[year][day](part, input);
 };
@@ -146,4 +134,30 @@ export const executeTest = async (year: Years, day: Days, part: Part) => {
     }
   }
   return undefined;
+};
+
+/**
+ * Helper class for chaining commands without having to use __filename ref
+ */
+export class RegistryHelper {
+  private year: Years;
+  private day: Days;
+  constructor(public filename: string) {
+    this.year = filenameToYear(this.filename);
+    this.day = filenameToDay(this.filename);
+  }
+
+  solver(solution: Solution) {
+    register(this.year, this.day, solution);
+    return this;
+  }
+
+  test(part: Part, input: string[], expectedOutput: string) {
+    addTest(this.filename, part, input, expectedOutput);
+    return this;
+  }
+}
+
+export const initialize = (filename: string, solution: Solution) => {
+  return new RegistryHelper(filename).solver(solution);
 };

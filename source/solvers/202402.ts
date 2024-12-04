@@ -1,5 +1,5 @@
 import '../utils';
-import { addTest, initialize } from '../utils/registry';
+import { initialize } from '../utils/registry';
 
 const validate = (row: number[]) => {
   // Get diffs
@@ -36,13 +36,6 @@ initialize(__filename, async (part, input) => {
     .filter((row) => validate(row) || (part == 2 && validateSubsetsByDroppingOneEntry(row)));
 
   return data.length.toString();
-});
-
-const data = `7 6 4 2 1
-1 2 7 8 9
-9 7 6 2 1
-1 3 2 4 5
-8 6 4 4 1
-1 3 6 7 9`.split('\n');
-addTest(__filename, 1, data, '2');
-addTest(__filename, 2, data, '4');
+})
+  .test(1, [`7 6 4 2 1`, `1 2 7 8 9`, `9 7 6 2 1`, `1 3 2 4 5`, `8 6 4 4 1`, `1 3 6 7 9`], '2')
+  .test(2, [`7 6 4 2 1`, `1 2 7 8 9`, `9 7 6 2 1`, `1 3 2 4 5`, `8 6 4 4 1`, `1 3 6 7 9`], '4');

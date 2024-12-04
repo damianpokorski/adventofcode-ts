@@ -1,12 +1,12 @@
 import '../utils';
-import { addTest, initialize } from '../utils/registry';
+import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   const table = input.map((row) => row.split(''));
   const cell = (y: number, x: number) => (table[y] && table[y][x] ? table[y][x] : '');
 
   // Part 1
-  let slices = [] as string[];
+  const slices = [] as string[];
   for (let y = 0; y < table.length; y++) {
     for (let x = 0; x < table[y].length; x++) {
       // Horizontals
@@ -28,48 +28,44 @@ initialize(__filename, async (part, input) => {
   for (let y = 0; y < table.length; y++) {
     for (let x = 0; x < table[y].length; x++) {
       // We're checking from center just cause it's easier
-      let lr = [cell(y - 1, x - 1), cell(y, x), cell(y + 1, x + 1)].join('');
-      let rl = [cell(y - 1, x + 1), cell(y, x), cell(y + 1, x - 1)].join('');
+      const lr = [cell(y - 1, x - 1), cell(y, x), cell(y + 1, x + 1)].join('');
+      const rl = [cell(y - 1, x + 1), cell(y, x), cell(y + 1, x - 1)].join('');
       if (['MAS', 'SAM'].includes(lr) && ['MAS', 'SAM'].includes(rl)) {
         xmasCounts++;
       }
     }
   }
   return xmasCounts.toString();
-});
-
-addTest(
-  __filename,
-  1,
-  [
-    `MMMSXXMASM`,
-    `MSAMXMSMSA`,
-    `AMXSXMAAMM`,
-    `MSAMASMSMX`,
-    `XMASAMXAMM`,
-    `XXAMMXXAMA`,
-    `SMSMSASXSS`,
-    `SAXAMASAAA`,
-    `MAMMMXMMMM`,
-    `MXMXAXMASX`
-  ],
-  '18'
-);
-
-addTest(
-  __filename,
-  2,
-  [
-    `.M.S......`,
-    `..A..MSMS.`,
-    `.M.S.MAA..`,
-    `..A.ASMSM.`,
-    `.M.S.M....`,
-    `..........`,
-    `S.S.S.S.S.`,
-    `.A.A.A.A..`,
-    `M.M.M.M.M.`,
-    `..........`
-  ],
-  '9'
-);
+})
+  .test(
+    1,
+    [
+      `MMMSXXMASM`,
+      `MSAMXMSMSA`,
+      `AMXSXMAAMM`,
+      `MSAMASMSMX`,
+      `XMASAMXAMM`,
+      `XXAMMXXAMA`,
+      `SMSMSASXSS`,
+      `SAXAMASAAA`,
+      `MAMMMXMMMM`,
+      `MXMXAXMASX`
+    ],
+    '18'
+  )
+  .test(
+    2,
+    [
+      `.M.S......`,
+      `..A..MSMS.`,
+      `.M.S.MAA..`,
+      `..A.ASMSM.`,
+      `.M.S.M....`,
+      `..........`,
+      `S.S.S.S.S.`,
+      `.A.A.A.A..`,
+      `M.M.M.M.M.`,
+      `..........`
+    ],
+    '9'
+  );

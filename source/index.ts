@@ -22,7 +22,7 @@ export const command = (command: string[]) => {
     )
     .addOption(new Option('--no-tests-required', 'Does not require tests to be passing before running'))
     .action(
-      async (selectedYear: Years, selectedDay: Days, part: Part, options: { testsRequired: Boolean }) => {
+      async (selectedYear: Years, selectedDay: Days, part: Part, options: { testsRequired: boolean }) => {
         // Flatter registry
         const puzzles = getRegistryItems((year, day) => {
           return (

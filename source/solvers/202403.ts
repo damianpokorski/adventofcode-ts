@@ -1,5 +1,5 @@
 import '../utils';
-import { addTest, initialize } from '../utils/registry';
+import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   // Challenged myself to do this one without creating any variables directly
@@ -22,7 +22,6 @@ initialize(__filename, async (part, input) => {
     .map(([a, b]) => a * b)
     .sum()
     .toString();
-});
-
-addTest(__filename, 1, [`xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))`], '161');
-addTest(__filename, 2, [`xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))`], '48');
+})
+  .test(1, [`xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))`], '161')
+  .test(2, [`xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))`], '48');
