@@ -1,3 +1,5 @@
+// All of the utils files break conventions :) But it's fun
+
 export {};
 
 // String extensions
@@ -13,6 +15,19 @@ declare global {
      * @param direction ltr - left to right, rtl - right to left, default to ltr if not provided
      */
     substringFind(predicate: (value: string) => boolean, direction?: 'ltr' | 'rtl'): string | undefined;
+
+    /**
+     * Very unlikely I'll need to reuse this - but just in case
+     * Maps 'one' to '1' etc. 1-9
+     */
+    swapSpelledOutDigitsToNumbers(): string;
+
+    hasNumber(): boolean;
+
+    /**
+     * Extracts numeric values from string, i.e. -5.19, 3.14, 5, 500, 0.00001 etc.
+     */
+    extractNumbers(): number[];
   }
 }
 
@@ -37,5 +52,40 @@ if (!String.prototype.substringFind) {
       }
     }
     return undefined;
+  };
+}
+
+if (!String.prototype.swapSpelledOutDigitsToNumbers) {
+  String.prototype.swapSpelledOutDigitsToNumbers = function () {
+    return this.massReplace({
+      one: '1',
+      two: '2',
+      three: '3',
+      four: '4',
+      five: '5',
+      six: '6',
+      seven: '7',
+      eight: '8',
+      nine: '9',
+      zero: '0'
+    });
+  };
+}
+
+if (!String.prototype.hasNumber) {
+  String.prototype.hasNumber = function () {
+    return /\d/g.test(`${this}`);
+  };
+}
+
+if (!String.prototype.extractNumbers) {
+  String.prototype.extractNumbers = function () {
+    const match = this.matchAll(/(([+-]*\d*\.*\d+))/g);
+    if (match == null) {
+      return [];
+    }
+    return [...match].map((value) => {
+      return parseFloat(value[0]);
+    });
   };
 }

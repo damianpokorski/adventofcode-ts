@@ -32,7 +32,7 @@ export type Days =
 
 export type Part = 1 | 2 | '.';
 
-export type Solution = (part: Part, input: string[]) => Promise<string>;
+export type Solution = (part: Part, input: string[]) => Promise<string | number>;
 
 /** Naughty global state for convenient */
 export const registry = {} as Record<Years, Record<Days, Solution>>;

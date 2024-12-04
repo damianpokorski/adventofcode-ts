@@ -20,7 +20,7 @@ initialize(__filename, async (part, input) => {
     }
   }
   if (part == 1) {
-    return slices.filter((slice) => ['XMAS', 'SAMX'].includes(slice)).length.toString();
+    return slices.filter((slice) => ['XMAS', 'SAMX'].includes(slice)).length;
   }
 
   // Part 2
@@ -35,7 +35,7 @@ initialize(__filename, async (part, input) => {
       }
     }
   }
-  return xmasCounts.toString();
+  return xmasCounts;
 })
   .test(
     1,

@@ -69,7 +69,9 @@ export const command = (command: string[]) => {
 
             // Run the solver
             const start = performance.now();
-            const result = await (!skipped ? solution(currentPart, data) : Promise.resolve('Skipped'));
+            const result = (
+              await (!skipped ? solution(currentPart, data) : Promise.resolve('Skipped'))
+            ).toString();
             const duration = (performance.now() - start).toFixed(2);
 
             // Tabulate

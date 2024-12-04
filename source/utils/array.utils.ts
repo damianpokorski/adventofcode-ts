@@ -1,3 +1,5 @@
+// All of the utils files break conventions :) But it's fun
+
 export {};
 
 // Array extensions -  a bit naughty but it's just convenient
