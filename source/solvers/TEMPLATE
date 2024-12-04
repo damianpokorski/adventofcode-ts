@@ -1,0 +1,8 @@
+import '../utils';
+import { initialize } from '../utils/registry';
+
+initialize(__filename, async (part, input) => {
+  return ``;
+})
+  .test(1, ``.split('\n'), 0)
+  .test(2, ``.split('\n'), 0);

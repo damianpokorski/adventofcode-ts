@@ -1,5 +1,5 @@
 import { Argument, Option, program } from 'commander';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { cpSync, existsSync, readFileSync, writeFileSync } from 'fs';
 import { terminal } from 'terminal-kit';
 import './solvers';
 import { Days, executeTest, getRegistryItems, Part, Years } from './utils';
@@ -32,9 +32,16 @@ export const command = (command: string[]) => {
         });
         const parts = (part == undefined ? [1, 2] : [part]) as Part[];
 
-        // If no solvers found in registry, log it
-        if (puzzles.length == 0) {
-          console.log(`Failed to find solution for ${selectedYear}/${selectedDay} Part: ${parts.join(',')}`);
+        // If no solvers found in registry, create a new solver from template
+        if (puzzles.length == 0 && selectedYear !== '.' && selectedDay !== '.') {
+          console.log(
+            `Failed to find solution for ${selectedYear}/${selectedDay} Part: ${parts.join(',')}... `
+          );
+          const solutionFile = `./source/solvers/${selectedYear}${selectedDay.toString().padStart(2, '0')}.ts`;
+          if (!existsSync(solutionFile)) {
+            cpSync(`./source/solvers/TEMPLATE`, solutionFile);
+            console.log(`Created a new placeholder entry for missing puzzle`);
+          }
         }
 
         // Iterate through all solutions
@@ -55,7 +62,10 @@ export const command = (command: string[]) => {
             const testResult = await executeTest(year, day, currentPart);
             const testDuration = (performance.now() - startTest).toFixed(2);
 
-            const skipped = !(options.testsRequired == false || (options.testsRequired && testResult));
+            const skipped = !(
+              options.testsRequired == false ||
+              (options.testsRequired && testResult == true)
+            );
 
             // Run the solver
             const start = performance.now();

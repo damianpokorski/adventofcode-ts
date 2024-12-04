@@ -5,8 +5,9 @@ import { readdirSync, writeFileSync } from 'fs';
 writeFileSync(
   './source/solvers/index.ts',
   readdirSync('./source/solvers')
-    .map((filename) => filename.replace('.ts', ''))
     .filter((filename) => filename !== 'index.ts')
+    .filter((filename) => filename !== 'TEMPLATE')
+    .map((filename) => filename.replace('.ts', ''))
     .map((filename) => `import './${filename}';`)
     .join('\n') + '\n',
   {

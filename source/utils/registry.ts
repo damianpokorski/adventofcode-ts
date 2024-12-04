@@ -130,6 +130,7 @@ export const executeTest = async (year: Years, day: Days, part: Part) => {
     if (testResult == expectedResult) {
       return true;
     } else {
+      console.log(`${year} / ${day} - Test failed - expected ${expectedResult} received ${testResult}`);
       return false;
     }
   }
@@ -152,8 +153,8 @@ export class RegistryHelper {
     return this;
   }
 
-  test(part: Part, input: string[], expectedOutput: string) {
-    addTest(this.filename, part, input, expectedOutput);
+  test(part: Part, input: string[], expectedOutput: string | number) {
+    addTest(this.filename, part, input, expectedOutput.toString());
     return this;
   }
 }
