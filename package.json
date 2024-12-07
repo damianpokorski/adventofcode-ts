@@ -6,6 +6,7 @@
     "update:registry": "ts-node ./source/registry.autorefresh.ts",
     "prestart": "npm run update:registry",
     "start": "ts-node ./source/index.ts",
+    "start:bun": "bun ./source/index.ts",
     "lint:prettier": "prettier --config .prettierrc 'source/**/*.ts' --write",
     "lint": "npm run update:registry && npx eslint source",
     "lint:fix": "npx eslint source --fix"

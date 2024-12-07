@@ -23,27 +23,32 @@ initialize(__filename, async (part, input) => {
     return position.getGridValue(grid) === undefined;
   };
 
-  const walk = (start: Vector, facing: Vector) => {
+  const walk = (start: Vector, facing: Vector, withVisitTracking: boolean, withLoopDetection: boolean) => {
     let current = start.copy();
     let currentFacing = facing.copy();
     let moves = 0;
 
     const visited: Vector[] = [start.copy()];
-    const visitedHashes = new Set<string>();
+    const visitedHashes = new Set<number>();
     let loopDetected = false;
     while (!isOutOfBounds(current)) {
       if (canMove(current, currentFacing)) {
         current = current.add(currentFacing);
-        // Mark we've visited new spot
-        visited.push(current.copy());
 
-        // Add a new hash - if the entry exists - we're in a loop
-        if (!visitedHashes.has(current.toString() + '/' + currentFacing.toString())) {
-          visitedHashes.add(current.toString() + '/' + currentFacing.toString());
-        } else {
+        // P1 - Track locations
+        if (withVisitTracking && !isOutOfBounds(current)) {
+          visited.push(current.copy());
+        }
+        // P2 - Detect cycles
+        // if (withLoopDetection) {
+        const fastHash =
+          (current.x << 8) + (current.y << 16) + (currentFacing.x << 24) + (currentFacing.y << 32);
+        if (visitedHashes.has(fastHash)) {
           loopDetected = true;
           break;
         }
+        visitedHashes.add(fastHash);
+        // }
       } else {
         currentFacing = currentFacing.turnClockwise();
       }
@@ -60,11 +65,11 @@ initialize(__filename, async (part, input) => {
   };
 
   // Walk through the routes
-  const p1 = walk(initialPosition, initialFacing);
+  const p1 = walk(initialPosition, initialFacing, true, true);
 
-  const visited = p1.visited.filter((x) => !isOutOfBounds(x));
+  const visited = p1.visited;
   if (part == 1) {
-    return visited.map((x) => x.toString()).distinct().length;
+    return visited.map((x) => (x.x << 8) + x.y).distinct().length;
   }
 
   const loops: Vector[] = [];
@@ -73,7 +78,7 @@ initialize(__filename, async (part, input) => {
     grid[entryOnPath.y][entryOnPath.x] = '#';
 
     // Walk again to see if it's looped
-    if (walk(initialPosition, initialFacing).loopDetected) {
+    if (walk(initialPosition, initialFacing, false, true).loopDetected) {
       loops.push(entryOnPath.copy());
     }
 

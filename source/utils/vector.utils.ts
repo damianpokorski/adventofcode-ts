@@ -7,8 +7,19 @@ export class Vector {
   add(other: Vector) {
     return new Vector(this.x + other.x, this.y + other.y);
   }
+  addInPlace(other: Vector) {
+    this.x += other.x;
+    this.y += other.y;
+    return this;
+  }
   subtract(other: Vector) {
     return new Vector(this.x - other.x, this.y - other.y);
+  }
+
+  subtractInPlace(other: Vector) {
+    this.x -= other.x;
+    this.y -= other.y;
+    return this;
   }
 
   static fromChar(value: string) {
