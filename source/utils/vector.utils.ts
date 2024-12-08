@@ -69,4 +69,11 @@ export class Vector {
   equals(other: Vector) {
     return this.x == other.x && this.y == other.y;
   }
+  static from(x: number, y: number) {
+    return new Vector(x, y);
+  }
+
+  hash() {
+    return (this.x << 16) + this.y;
+  }
 }

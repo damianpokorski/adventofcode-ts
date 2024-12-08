@@ -40,15 +40,15 @@ initialize(__filename, async (part, input) => {
           visited.push(current.copy());
         }
         // P2 - Detect cycles
-        // if (withLoopDetection) {
-        const fastHash =
-          (current.x << 8) + (current.y << 16) + (currentFacing.x << 24) + (currentFacing.y << 32);
-        if (visitedHashes.has(fastHash)) {
-          loopDetected = true;
-          break;
+        if (withLoopDetection) {
+          const fastHash =
+            (current.x << 8) + (current.y << 16) + (currentFacing.x << 24) + (currentFacing.y << 32);
+          if (visitedHashes.has(fastHash)) {
+            loopDetected = true;
+            break;
+          }
+          visitedHashes.add(fastHash);
         }
-        visitedHashes.add(fastHash);
-        // }
       } else {
         currentFacing = currentFacing.turnClockwise();
       }
