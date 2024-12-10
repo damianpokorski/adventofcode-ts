@@ -45,7 +45,7 @@ export class Vector {
   static Right = new Vector(1, 0);
 
   getGridValue<T>(grid: T[][]): T | undefined {
-    if (grid[this.y] && grid[this.y][this.x]) {
+    if (grid[this.y] !== undefined && grid[this.y][this.x] !== undefined) {
       return grid[this.y][this.x];
     }
     return undefined;

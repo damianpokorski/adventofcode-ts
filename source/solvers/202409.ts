@@ -35,7 +35,7 @@ initialize(__filename, async (part, input) => {
           if (blankBuffer.length == 0) {
             // Grab next digit if our buffer is empty
             const [fillIndex, fillSize] = files.pop() ?? [0, 0];
-            blankBuffer.push(...[...new Array(fillSize)].map((_) => fillIndex));
+            blankBuffer.push(...[...new Array(fillSize)].map(() => fillIndex));
           }
           const endIndex = blankBuffer.shift() ?? 0;
           checksum += bufferIndex * endIndex;
