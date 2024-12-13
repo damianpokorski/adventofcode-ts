@@ -88,7 +88,7 @@ export const testRegistry = {} as Record<Years, Record<Days, Record<Part, [strin
 export const addTest = (filename: string, part: Part, input: string[], expectedResult: string) => {
   const year = filenameToYear(filename);
   const day = filenameToDay(filename);
-
+  // console.log({ filename, year, day, part, expectedResult });
   if (!testRegistry[year]) {
     testRegistry[year] = {} as Record<Days, Record<Part, [string[], string]>>;
   }

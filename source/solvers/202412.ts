@@ -49,19 +49,23 @@ initialize(__filename, async (part, input) => {
       completed.push(...section.map((v) => v.hash()));
 
       const area = section.length;
-      // Cheekily figure out the perimeter by expanding each cell by 1, and then excluding all existing fields
+      // Cheekily figure out the perimeter cells by expanding each cell by 1, and then excluding all existing fields
       const fencePositions = section
         .map((cell) =>
           cell
             .adjecents()
             .filter((adjecent) => section.find((other) => other.equals(adjecent)) == undefined)
-            .map((fence) => [fence, fence.toFacing(cell)] as [Vector, VectorFacing])
+            .distinct()
+            .map((fence) => [fence, cell.toFacing(fence)] as [Vector, VectorFacing])
         )
-        .flat()
-        .distinct(([a, b]) => `${a}/${b.toString()}`);
+        .flat();
 
       const perimeter = fencePositions.length;
       let sides = 0;
+      // Take 2
+      // Counting turns?
+      // Knowing perimeter - we can assume it's a continous line - we can sort out sections by distance?
+      // fencePositions.sort((a,b) => a)
       if (part == 2) {
         const horizontals = fencePositions
           .filter(([_, facing]) => [VectorFacing.U, VectorFacing.D].includes(facing))
@@ -84,22 +88,11 @@ initialize(__filename, async (part, input) => {
         }
       }
 
-      // // console.log(
-      // //   vector.getGridValue(grid),
-      // //   `P1:`,
-      // //   area,
-      // //   '*',
-      // //   perimeter,
-      // //   area * perimeter,
-      // //   'P2: ',
-      // //   area,
-      // //   '*',
-      // //   sides,
-      // //   area * sides
-      // // );
       if (part == 1) {
+        // console.log(vector.getGridValue(grid), `P1:`, area, '*', perimeter, area * perimeter);
         scores.push(area * perimeter);
       } else {
+        // console.log(vector.getGridValue(grid), 'P2: ', area, '*', sides, area * sides);
         scores.push(area * sides);
       }
     }

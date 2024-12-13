@@ -14,19 +14,26 @@ export class Vector {
   add(other: Vector) {
     return new Vector(this.x + other.x, this.y + other.y);
   }
-  addInPlace(other: Vector) {
-    this.x += other.x;
-    this.y += other.y;
-    return this;
-  }
   subtract(other: Vector) {
     return new Vector(this.x - other.x, this.y - other.y);
   }
 
-  subtractInPlace(other: Vector) {
-    this.x -= other.x;
-    this.y -= other.y;
-    return this;
+  divide(other: Vector) {
+    return new Vector(this.x / other.x, this.y / other.y);
+  }
+  multiply(other: Vector) {
+    return new Vector(this.x * other.x, this.y * other.y);
+  }
+  floor() {
+    return new Vector(Math.floor(this.x), Math.floor(this.y));
+  }
+
+  findIntersectionFrequency(secondVector: Vector, target: Vector) {
+    const thisRepeats =
+      (target.x * secondVector.y - target.y * secondVector.x) /
+      (this.x * secondVector.y - this.y * secondVector.x);
+    const secondVectorRepeats = (target.x - this.x * thisRepeats) / secondVector.x;
+    return [thisRepeats, secondVectorRepeats];
   }
 
   static fromChar(value: string) {
@@ -45,6 +52,7 @@ export class Vector {
   copy() {
     return new Vector(this.x, this.y);
   }
+
   static Zero = new Vector(0, 0);
   static Up = new Vector(0, -1);
   static Down = new Vector(0, 1);
@@ -71,6 +79,11 @@ export class Vector {
         [Vector.Right.toString()]: VectorFacing.R
       }[this.subtract(other).toString()] ?? undefined
     );
+  }
+
+  gridDistance(other: Vector): number {
+    const { x, y } = this.subtract(other);
+    return Math.abs(x) + Math.abs(y);
   }
 
   turnClockwise() {
