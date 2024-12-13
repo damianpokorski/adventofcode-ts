@@ -1,3 +1,10 @@
+export enum VectorFacing {
+  U = 'U',
+  R = 'R',
+  D = 'D',
+  L = 'L'
+}
+
 export class Vector {
   constructor(
     public x = 0,
@@ -50,6 +57,22 @@ export class Vector {
     }
     return undefined;
   }
+
+  adjecents() {
+    return [this.add(Vector.Up), this.add(Vector.Right), this.add(Vector.Down), this.add(Vector.Left)];
+  }
+
+  toFacing(other: Vector) {
+    return (
+      {
+        [Vector.Up.toString()]: VectorFacing.U,
+        [Vector.Down.toString()]: VectorFacing.D,
+        [Vector.Left.toString()]: VectorFacing.L,
+        [Vector.Right.toString()]: VectorFacing.R
+      }[this.subtract(other).toString()] ?? undefined
+    );
+  }
+
   turnClockwise() {
     if (this.x == Vector.Up.x && this.y == Vector.Up.y) {
       return Vector.Right;

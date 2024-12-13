@@ -6,21 +6,27 @@ export {};
 declare global {
   interface Array<T> {
     /**
-     * Filters & removes repeated objects from an array
+     * Filters & removes repeated objects from an array - only works for scalar values (strings, numbers etc)
      */
-    distinct(): T[];
+    distinct(hash?: (a: T) => string | number): T[];
 
     /**
      * Zips it together with another array of matching type
      * @param other Other array
      * @param enforceLengthMatch whether it should reject if array lengths are different
      */
-    zip<T>(other: T[], enforceLengthMatch?: boolean): [T, T][];
+    zip(other: T[], enforceLengthMatch?: boolean): [T, T][];
 
     /**
      * Sums up an array of numbers using reduction
      */
     sum<T extends number>(): T;
+
+    /**
+     * Groups object into a hashmap of arrays
+     * @param keyGenerator - generates a key to be used in a dashmap
+     */
+    groupBy<U extends string | number>(keyGenerator: (value: T) => U): Record<U, T[]>;
   }
 
   interface String {
@@ -29,7 +35,18 @@ declare global {
 }
 
 if (!Array.prototype.distinct) {
-  Array.prototype.distinct = function <T>() {
+  Array.prototype.distinct = function <T>(hash?: (arg: T) => string | number) {
+    if (hash) {
+      return Object.values(
+        this.reduce(
+          (hashmap, value) => {
+            hashmap[hash(value)] = value;
+            return hashmap;
+          },
+          {} as Record<string | number, T>
+        )
+      );
+    }
     return [...new Set<T>([...this])];
   };
 }
@@ -51,5 +68,23 @@ if (!Array.prototype.zip) {
 if (!Array.prototype.sum) {
   Array.prototype.sum = function <T extends number>() {
     return this.reduce((a, b) => a + b, 0) as T;
+  };
+}
+
+if (!Array.prototype.groupBy) {
+  Array.prototype.groupBy = function <T, U extends string | number>(
+    keyGenerator: (arg: T) => U
+  ): Record<U, T[]> {
+    const groups = {} as Record<U, T[]>;
+
+    for (const entry of this) {
+      const key = keyGenerator(entry);
+      if (groups[key] == undefined) {
+        groups[key] = [];
+      }
+      groups[key].push(entry);
+    }
+
+    return groups;
   };
 }
