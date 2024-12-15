@@ -4,7 +4,7 @@ import { initialize } from '../utils/registry';
 
 const delay = (ms: number) => new Promise((resolve, reject) => setTimeout(() => resolve(undefined), ms));
 
-initialize(__filename, async (part, input) => {
+initialize(__filename, async (part, input, opts) => {
   const [inputGrid, inputMoves] = input.join('\n').split('\n\n');
   const grid = inputGrid
     .split('\n')
@@ -43,7 +43,7 @@ initialize(__filename, async (part, input) => {
 
   let iteration = 0;
   const log = (move: Vector) => {
-    // console.clear();
+    console.clear();
     console.log(`Iteration: #${iteration} Last move ${move?.toChar()}`);
     console.log(`Robot: ${robot}`);
     for (const row of grid) {
@@ -52,6 +52,7 @@ initialize(__filename, async (part, input) => {
     console.log();
     iteration++;
   };
+
   // // // log(Vector.Zero);
   while (moves.length > 0) {
     const move = moves.shift();
@@ -89,8 +90,7 @@ initialize(__filename, async (part, input) => {
               const nextSet = verticalShifts[verticalShifts.length - 1].map((boxes) => boxes.add(move));
               // const nextSetBoxes = nextSet.filter((x) => ['[', ']'].includes(x.getGridValue(grid) ?? ''));
               const nextSetBoxes = [...nextSet];
-              // Trim L edge blanks
-              // If we're misaligned, we should expand our pushing section
+              // Trim blank spaces around edges - wee don't want to push those, but bits inbetween -yeah
               while (nextSetBoxes.length > 0 && nextSetBoxes[0].getGridValue(grid) == '.') {
                 nextSetBoxes.shift();
               }
@@ -100,6 +100,7 @@ initialize(__filename, async (part, input) => {
               ) {
                 nextSetBoxes.pop();
               }
+              // If we're misaligned, we should expand our pushing section
               if (nextSetBoxes.length > 0) {
                 if (nextSetBoxes[0].getGridValue(grid) == ']') {
                   nextSetBoxes.unshift(nextSetBoxes[0].add(new Vector(-1, 0)));
@@ -157,8 +158,11 @@ initialize(__filename, async (part, input) => {
         // We know we're facing a blank now
         moveTargetType = '.';
       }
-      // // // log(move);
-      // // // await delay(10);
+
+      if (opts.verbose) {
+        log(move);
+        await delay(10);
+      }
     }
 
     // A blank spot - move into it

@@ -31,8 +31,10 @@ export type Days =
   | '.';
 
 export type Part = 1 | 2 | '.';
-
-export type Solution = (part: Part, input: string[]) => Promise<string | number>;
+export interface Options {
+  verbose?: boolean;
+}
+export type Solution = (part: Part, input: string[], options: Options) => Promise<string | number>;
 
 /** Naughty global state for convenient */
 export const registry = {} as Record<Years, Record<Days, Solution>>;
@@ -102,7 +104,7 @@ export const addTest = (filename: string, part: Part, input: string[], expectedR
 };
 
 /** Runs registered solution if found */
-export const execute = async (year: Years, day: Days, part: Part, input: string[]) => {
+export const execute = async (year: Years, day: Days, part: Part, input: string[], opts: Options) => {
   if (!registry[year]) {
     throw new Error(`No solutions registered for year: ${year}`);
   }
@@ -111,11 +113,11 @@ export const execute = async (year: Years, day: Days, part: Part, input: string[
   }
 
   // Execute & Return particular solution
-  return await registry[year][day](part, input);
+  return await registry[year][day](part, input, opts);
 };
 
 /** Runs registered solution if found */
-export const executeTest = async (year: Years, day: Days, part: Part) => {
+export const executeTest = async (year: Years, day: Days, part: Part, opts: Options) => {
   if (!registry[year]) {
     throw new Error(`No solutions registered for year: ${year}`);
   }
@@ -126,7 +128,7 @@ export const executeTest = async (year: Years, day: Days, part: Part) => {
   // Execute test if available
   if (testRegistry[year] && testRegistry[year][day] && testRegistry[year][day][part]) {
     const [testInput, expectedResult] = testRegistry[year][day][part];
-    const testResult = await registry[year][day](part, testInput);
+    const testResult = await registry[year][day](part, testInput, opts);
     if (testResult == expectedResult) {
       return true;
     } else {

@@ -21,8 +21,14 @@ export const command = (command: string[]) => {
       new Option('--tests-required', 'Requires tests to run before executing against real data').default(true)
     )
     .addOption(new Option('--no-tests-required', 'Does not require tests to be passing before running'))
+    .addOption(new Option('--verbose', 'Adds extra logging flag to the puzzle solvers').default(false))
     .action(
-      async (selectedYear: Years, selectedDay: Days, part: Part, options: { testsRequired: boolean }) => {
+      async (
+        selectedYear: Years,
+        selectedDay: Days,
+        part: Part,
+        options: { testsRequired: boolean; verbose: boolean }
+      ) => {
         // Flatter registry
         const puzzles = getRegistryItems((year, day) => {
           return (
@@ -59,7 +65,7 @@ export const command = (command: string[]) => {
           for (const currentPart of parts) {
             // Run the test
             const startTest = performance.now();
-            const testResult = await executeTest(year, day, currentPart);
+            const testResult = await executeTest(year, day, currentPart, options);
             const testDuration = (performance.now() - startTest).toFixed(2);
 
             const skipped = !(
@@ -70,7 +76,7 @@ export const command = (command: string[]) => {
             // Run the solver
             const start = performance.now();
             const result = (
-              await (!skipped ? solution(currentPart, data) : Promise.resolve('Skipped'))
+              await (!skipped ? solution(currentPart, data, options) : Promise.resolve('Skipped'))
             ).toString();
             const duration = (performance.now() - start).toFixed(2);
 
