@@ -46,6 +46,21 @@ export class Vector {
       }[value] ?? Vector.Zero;
     return new Vector(x, y);
   }
+  toChar() {
+    if (this.equals(Vector.Up)) {
+      return '^';
+    }
+    if (this.equals(Vector.Right)) {
+      return '>';
+    }
+    if (this.equals(Vector.Down)) {
+      return 'V';
+    }
+    if (this.equals(Vector.Left)) {
+      return '<';
+    }
+    return '';
+  }
   toString() {
     return `${this.x},${this.y}`;
   }
@@ -68,6 +83,14 @@ export class Vector {
 
   adjecents() {
     return [this.add(Vector.Up), this.add(Vector.Right), this.add(Vector.Down), this.add(Vector.Left)];
+  }
+
+  isHorizontal() {
+    return this.x !== 0 && this.y == 0;
+  }
+
+  isVertical() {
+    return this.x == 0 && this.y !== 0;
   }
 
   toFacing(other: Vector) {
