@@ -124,6 +124,21 @@ export class Vector {
     }
     return Vector.Zero;
   }
+  turnCounterClockwise() {
+    if (this.x == Vector.Up.x && this.y == Vector.Up.y) {
+      return Vector.Left;
+    }
+    if (this.x == Vector.Right.x && this.y == Vector.Right.y) {
+      return Vector.Up;
+    }
+    if (this.x == Vector.Down.x && this.y == Vector.Down.y) {
+      return Vector.Right;
+    }
+    if (this.x == Vector.Left.x && this.y == Vector.Left.y) {
+      return Vector.Down;
+    }
+    return Vector.Zero;
+  }
 
   equals(other: Vector) {
     return this.x == other.x && this.y == other.y;
