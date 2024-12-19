@@ -1,6 +1,7 @@
 export * from './array.utils';
 export * from './dumbAlgos.utils';
 export * from './grid.utils';
+export * from './memoize.utils';
 export * from './registry';
 export * from './string.utils';
 export * from './terminal.utils';
