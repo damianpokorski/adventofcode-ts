@@ -1,3 +1,5 @@
+import { Vector } from './vector.utils';
+
 /* eslint-disable @typescript-eslint/prefer-for-of */
 export class Grid<T extends object | string | number | boolean> {
   constructor(public array: T[][]) {}
@@ -18,7 +20,35 @@ export class Grid<T extends object | string | number | boolean> {
     console.log(this.toString(mapper));
   }
 
+  find(predicate: (cell: T) => boolean) {
+    return this.array.flat().find(predicate);
+  }
+
+  findLocationOf(predicate: (cell: T) => boolean): Vector | undefined {
+    for (let y = 0; y < this.array.length; y++) {
+      for (let x = 0; x < this.array[y].length; x++) {
+        if (predicate(this.array[y][x])) {
+          return new Vector(x, y);
+        }
+      }
+    }
+  }
+
+  asVectors() {
+    const output: [Vector, T][] = [];
+    for (let y = 0; y < this.array.length; y++) {
+      for (let x = 0; x < this.array[y].length; x++) {
+        output.push([new Vector(x, y), this.array[y][x]]);
+      }
+    }
+    return output;
+  }
+
   static createAndFill<T extends object | string | number | boolean>(x: number, y: number, value: T) {
     return new Grid<T>([...new Array(y)].map(() => [...new Array(x)].map(() => value)));
+  }
+
+  static fromStrings(input: string[]) {
+    return new Grid(input.map((row) => row.split('')));
   }
 }

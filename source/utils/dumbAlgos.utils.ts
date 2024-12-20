@@ -1,3 +1,4 @@
+import { Queue } from 'typescript-collections';
 import { Vector } from './vector.utils';
 
 export const floodFill = <T>(vector: Vector, getter: (v: Vector) => T) => {
@@ -27,4 +28,59 @@ export const floodFill = <T>(vector: Vector, getter: (v: Vector) => T) => {
     set.push(...expands);
   }
   return set;
+};
+
+export const shortestPath = <T>(
+  grid: T[][],
+  start: Vector,
+  end: Vector,
+  invalidPath: (v: Vector, cell: T, grid: T[][]) => boolean
+) => {
+  // Constrain to looking on the grid
+  const gridSizeY = grid.length;
+  const gridSizeX = grid[0].length;
+
+  // Build a queue and add a starting point
+  const paths = new Queue<{ head: Vector; step: number; route: Vector[] }>();
+  paths.add({ head: start, step: 0, route: [start] });
+
+  // Tracking visited spots
+  const seen = new Set<number>();
+  seen.add(Vector.Zero.hash());
+
+  // While there are paths to visit, continue visitig
+  while (paths.size() > 0) {
+    // Grab a next path on a list
+    const path = paths.dequeue()!;
+
+    // Reached the end! - Because we keep searching the closest traveled paths first, we're guaranteed to have found the best one
+    if (end.equals(path.head)) {
+      return { steps: path.step, route: path.route };
+    }
+
+    // For each adjecent point
+    for (const next of path.head.adjecents()) {
+      // Do not go out of bounds
+      if (next.x < 0 || next.y < 0 || next.x > gridSizeX || next.y > gridSizeY) {
+        continue;
+      }
+
+      // Skip any we might've already been here
+      if (seen.has(next.hash())) {
+        continue;
+      }
+
+      // Invalid path takes next points and returns whether it's valid or not, usually checking if it's a '#'
+      if (invalidPath(next, next.getGridValue(grid)!, grid)) {
+        continue;
+      }
+
+      // We're marking this spot as visited - to prevent other paths trying to go down this path again
+      seen.add(next.hash());
+
+      // We add the next steop in paths
+      paths.add({ head: next, step: path.step + 1, route: [...path.route, next] });
+    }
+  }
+  return { steps: Number.POSITIVE_INFINITY, route: [] };
 };
