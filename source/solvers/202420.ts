@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import '../utils';
-import { Grid, shortestPath, Vector } from '../utils';
+import { Grid, shortestPath } from '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input, opts) => {
@@ -11,58 +11,61 @@ initialize(__filename, async (part, input, opts) => {
   grid.array[end.y][end.x] = '.';
 
   // Use djkstra, get distance & steps taken
-  const { steps: originalDistance, route: path } = shortestPath(
+  const { route: path } = shortestPath(
     grid.array,
     start,
     end,
-    (v, c, g) => c !== '.'
+    // Any paths that are not '.' or 'E' should not be considered traversable
+    (v, c, g) => c !== '.' && c !== 'E'
   );
 
-  // Make steps and their index - to negative distance, i.e. starting it 5th step, saves 5 steps
-  const distanceMap = Object.fromEntries(path.map((v, index) => [v.hash(), index * -1]));
-
-  // Add the end to the path
-  distanceMap[end.hash()] = -originalDistance;
-  path.push(end);
+  // Get list of steps and use their index - to calc negative distance, i.e. starting it 5th step is saving us  5 steps
+  const distanceMap = new Map(path.map((v, index) => [v.hash(), index * -1]));
 
   // Store the best cheats
-  const bestCheats = {} as Record<string, number>;
+  const bestCheats = new Map<number, number>();
 
   // For each step, we search in radius of 2 to 20 - for available spots to jump to, then we go from there
   for (let index = 0; index < path.length; index++) {
     // Find valid path skips - we find what paths we can end up on - and then calculate steps saved
     // Skipping over 12 walls, for example can save any number of steps, but we need to the steps we've noclipped on
-    for (const [other, saved] of path
+    for (const [otherHash, saved] of path
       // Find Paths overlapping with radius
       .filter((other) => path[index].gridDistance(other) <= (part == 1 ? 2 : 20))
       // Calculate distance saved
       .map(
         (other) =>
           [
-            other,
-            distanceMap[path[index].hash()] - distanceMap[other.hash()] + path[index].gridDistance(other)
-          ] as [Vector, number]
+            // Convert start and end to a hash - gotta go fast
+            (path[index].hash() << 8) + other.hash(),
+            // Caluclate distance saved: Starting point remaining distance - end point remaining distinace + distance on the grid travelled during the skip
+            distanceMap.get(path[index].hash())! -
+              distanceMap.get(other.hash())! +
+              path[index].gridDistance(other)
+          ] as [number, number]
       )
       // Filter anything not efficient enough
       .filter(([other, saved]) => saved <= -100)) {
-      const skipHash = `${path[index]}/${other}`;
-      bestCheats[skipHash] = Math.min(saved, bestCheats[skipHash] ?? Number.POSITIVE_INFINITY);
+      // Save any valid cheats into the hash
+      bestCheats.set(otherHash, saved);
     }
   }
 
-  // Sum up the results
-  let result = 0;
-  for (const [saved, skips] of Object.entries(Object.entries(bestCheats).groupBy(([key, value]) => value))
-    .map(([saved, skips]) => [Math.abs(parseInt(saved)), skips.length])
-    .sort((a, b) => a[0] - b[0])) {
-    if (opts.verbose) {
+  if (opts.verbose) {
+    for (const [saved, skips] of Object.entries(
+      bestCheats
+        .entries()
+        .toArray()
+        .groupBy(([key, value]) => value)
+    )
+      .map(([saved, skips]) => [Math.abs(parseInt(saved)), skips.length])
+      .sort((a, b) => a[0] - b[0])) {
       console.log(`There are ${skips} cheats that save ${saved} picoseconds`);
     }
-    if (saved >= 100) {
-      result += skips;
-    }
   }
-  return result;
+
+  // Sum up the results - count keys without making a new array
+  return bestCheats.keys().reduce((a, b) => a + 1, 0);
 })
   .test(
     1,
