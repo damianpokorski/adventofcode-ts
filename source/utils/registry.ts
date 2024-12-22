@@ -159,6 +159,18 @@ export class RegistryHelper {
     addTest(this.filename, part, input, expectedOutput.toString());
     return this;
   }
+
+  tests(
+    input: string[],
+    expectedOutputPart1: string | number,
+    expectedOutputPart2?: string | number | undefined
+  ) {
+    addTest(this.filename, 1, input, expectedOutputPart1.toString());
+    if (expectedOutputPart2) {
+      addTest(this.filename, 2, input, expectedOutputPart2.toString());
+    }
+    return this;
+  }
 }
 
 export const initialize = (filename: string, solution: Solution) => {

@@ -1,6 +1,73 @@
 import '../utils';
 import { initialize } from '../utils/registry';
-const testData = `seeds: 79 14 55 13
+
+initialize(__filename, async (part, input) => {
+  const lookup = {} as Record<string, Record<string, ((input: number) => number | null)[]>>;
+  let seeds: number[] = [];
+  const maps = new Set<string>();
+
+  const makeMapper = (sourceStart: number, destinationStart: number, range: number) => {
+    console.log({ sourceStart, destinationStart, range });
+    return (v: number) => {
+      if (v >= sourceStart && v < sourceStart + range) {
+        console.log({ sourceStart, destinationStart, range });
+        return v + (sourceStart - destinationStart);
+      }
+      return null;
+    };
+  };
+
+  for (const group of input.join('\n').split('\n\n')) {
+    const [label, itemsRaw] = group.replace(' map', '').split(':');
+    const items = itemsRaw.trim().split('\n');
+    const [source, destination] = label.split('-to-');
+
+    if (source == 'seeds') {
+      seeds = itemsRaw
+        .trim()
+        .split(' ')
+        .map((x) => parseInt(x, 10));
+      continue;
+    }
+    maps.add(source);
+    maps.add(destination);
+
+    // Build a stack of mappers
+    lookup[source] = lookup[source] ? lookup[source] : {};
+    lookup[source][destination] = lookup[source][destination] ? lookup[source][destination] : [];
+
+    for (const row of items) {
+      const [sourceStart, destinationStart, range] = row.split(' ').map((v) => parseInt(v, 10));
+
+      // Destination processing
+      lookup[source][destination].push(makeMapper(sourceStart, destinationStart, range));
+    }
+  }
+
+  const convert = (a: string, b: string, n: number) => {
+    return (
+      lookup[a][b]
+        .map((fn) => fn(n))
+        .filter((v) => v !== null)
+        .shift() ?? n
+    );
+  };
+  const conversions = [...maps];
+  const convertAll = (n: number) => {
+    let currentN = n;
+    for (let i = 1; i < conversions.length; i++) {
+      currentN = convert(conversions[i - 1], conversions[i], currentN);
+      console.log([conversions[i - 1], conversions[i], currentN]);
+    }
+    return currentN;
+  };
+  console.log(seeds);
+  // return seeds.map(convertAll).reduce((a, b) => Math.min(a, b), Number.POSITIVE_INFINITY);
+
+  console.log(convertAll(14));
+  // return seeds.map((seed) => convertAll(seed));
+}).tests(
+  `seeds: 79 14 55 13
 
 seed-to-soil map:
 50 98 2
@@ -32,121 +99,6 @@ temperature-to-humidity map:
 
 humidity-to-location map:
 60 56 37
-56 93 4`.split('\n');
-initialize(__filename, async (part, input) => {
-  const lookup = {} as Record<
-    string,
-    Record<
-      string,
-      {
-        offset: number;
-        source: {
-          start: number;
-          end: number;
-        };
-        destination: {
-          start: number;
-          end: number;
-        };
-      }[]
-    >
-  >;
-  let seeds: number[] = [];
-  const groups = input
-    .join('\n')
-    .split('\n\n')
-    .map((group) => {
-      const [label, itemsRaw] = group.replace(' map', '').split(':');
-      const items = itemsRaw.trim().split('\n');
-      const [source, destination] = label.split('-to-');
-
-      if (source == 'seeds') {
-        seeds = itemsRaw
-          .trim()
-          .split(' ')
-          .map((x) => parseInt(x, 10));
-        return;
-      }
-
-      // Insert stacks
-      lookup[source] = lookup[source] ? lookup[source] : {};
-      lookup[source][destination] = lookup[source][destination] ? lookup[source][destination] : [];
-
-      const ranges = items.map((row) => {
-        const [destinationStart, sourceStart, range] = row.split(' ');
-        // Destination processing
-        if (destination) {
-          lookup[source][destination].push({
-            offset: parseInt(destinationStart, 10) - parseInt(sourceStart, 10),
-            source: {
-              start: parseInt(sourceStart, 10),
-              end: parseInt(sourceStart, 10) + parseInt(range, 10) - 1
-            },
-            destination: {
-              start: parseInt(destinationStart, 10),
-              end: parseInt(destinationStart, 10) + parseInt(range, 10) - 1
-            }
-          });
-        }
-      });
-    });
-
-  let minSeed = Infinity;
-  let minLocation = Infinity;
-  const path = ['seed', 'soil', 'fertilizer', 'water', 'light', 'temperature', 'humidity', 'location'];
-
-  for (const seed of seeds) {
-    let value = seed;
-    for (let pathIndex = 0; pathIndex < path.length - 1; pathIndex++) {
-      const [source, destination] = [path[pathIndex], path[pathIndex + 1]];
-
-      const { offset } = lookup[source][destination].find(
-        (range) => range.source.start <= value && range.source.end >= value
-      ) ?? { offset: 0 };
-      const end = value + offset;
-      value = end;
-      if (destination == 'location' && minLocation > end) {
-        minLocation = end;
-        minSeed = seed;
-      }
-    }
-  }
-  if (part == 1) {
-    return minLocation;
-  }
-
-  // Part 2
-  const seedPairs = seeds.reduce(function (result, value, index, array) {
-    if (index % 2 === 0) result.push(array.slice(index, index + 2));
-    return result;
-  }, [] as number[][]);
-
-  for (const [seedStart, rangeSize] of seedPairs) {
-    console.log({ seedStart, rangeSize });
-    for (let range = 0; range < rangeSize; range++) {
-      const seed = seedStart + range;
-      let value = seed;
-      // Ticker
-      if (seed % 100000 == 0) {
-        console.log(`[Tick ${seedStart} / ${seed} ${range / rangeSize}`);
-      }
-      for (let pathIndex = 0; pathIndex < path.length - 1; pathIndex++) {
-        // Logic
-        const [source, destination] = [path[pathIndex], path[pathIndex + 1]];
-        const { offset } = lookup[source][destination].find(
-          (range) => range.source.start <= value && range.source.end >= value
-        ) ?? { offset: 0 };
-        const end = value + offset;
-        value = end;
-        if (destination == 'location' && minLocation > end) {
-          minLocation = end;
-          minSeed = seed;
-        }
-      }
-    }
-  }
-
-  return minLocation;
-})
-  .test(1, testData, 35)
-  .test(2, testData, 46);
+56 93 4`.split('\n'),
+  '1'
+);
