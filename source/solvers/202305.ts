@@ -6,12 +6,12 @@ initialize(__filename, async (part, input) => {
   let seeds: number[] = [];
   const maps = new Set<string>();
 
-  const makeMapper = (sourceStart: number, destinationStart: number, range: number) => {
-    console.log({ sourceStart, destinationStart, range });
+  const makeMapper = (from: number, destinationStart: number, range: number) => {
+    console.log({ from, destinationStart, range, offset: destinationStart - from });
     return (v: number) => {
-      if (v >= sourceStart && v < sourceStart + range) {
-        console.log({ sourceStart, destinationStart, range });
-        return v + (sourceStart - destinationStart);
+      if (v >= from && v < from + range) {
+        console.log({ from, destinationStart, range });
+        return v + (destinationStart - from);
       }
       return null;
     };
@@ -37,27 +37,32 @@ initialize(__filename, async (part, input) => {
     lookup[source][destination] = lookup[source][destination] ? lookup[source][destination] : [];
 
     for (const row of items) {
-      const [sourceStart, destinationStart, range] = row.split(' ').map((v) => parseInt(v, 10));
+      const [from, to, range] = row.split(' ').map((v) => parseInt(v, 10));
 
       // Destination processing
-      lookup[source][destination].push(makeMapper(sourceStart, destinationStart, range));
+      console.log({ source, destination });
+      lookup[source][destination].push(makeMapper(from, to, range));
     }
   }
 
   const convert = (a: string, b: string, n: number) => {
-    return (
-      lookup[a][b]
-        .map((fn) => fn(n))
-        .filter((v) => v !== null)
-        .shift() ?? n
-    );
+    let result = null;
+    for (const mapper of lookup[a][b]) {
+      result = mapper(n);
+      if (result !== null) {
+        break;
+      }
+    }
+    return result == null ? n : result;
   };
   const conversions = [...maps];
   const convertAll = (n: number) => {
     let currentN = n;
     for (let i = 1; i < conversions.length; i++) {
+      console.log('Before', [conversions[i - 1], conversions[i], currentN]);
       currentN = convert(conversions[i - 1], conversions[i], currentN);
-      console.log([conversions[i - 1], conversions[i], currentN]);
+      console.log('After', [conversions[i - 1], conversions[i], currentN]);
+      console.log('--');
     }
     return currentN;
   };
