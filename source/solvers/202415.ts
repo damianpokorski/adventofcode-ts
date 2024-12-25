@@ -161,7 +161,7 @@ initialize(__filename, async (part, input, opts) => {
 
       if (opts.verbose) {
         log(move);
-        await delay(10);
+        await delay(20);
       }
     }
 

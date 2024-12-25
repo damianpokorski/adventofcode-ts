@@ -33,6 +33,7 @@ export type Days =
 export type Part = 1 | 2 | '.';
 export interface Options {
   verbose?: boolean;
+  isTest?: boolean;
 }
 export type Solution = (part: Part, input: string[], options: Options) => Promise<string | number>;
 
@@ -128,7 +129,7 @@ export const executeTest = async (year: Years, day: Days, part: Part, opts: Opti
   // Execute test if available
   if (testRegistry[year] && testRegistry[year][day] && testRegistry[year][day][part]) {
     const [testInput, expectedResult] = testRegistry[year][day][part];
-    const testResult = await registry[year][day](part, testInput, opts);
+    const testResult = await registry[year][day](part, testInput, { ...opts, isTest: true });
     if (testResult == expectedResult) {
       return true;
     } else {
