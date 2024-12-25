@@ -81,9 +81,6 @@ initialize(__filename, async (part, input, opts) => {
   // Otherwise it'd take days of me trying to burte force it, or i would've done it by hand like a lot of people with graphviz
   const wrongs = [] as string[];
   for (const { op, a, b, result } of wires) {
-    const left = a;
-    const right = b;
-
     // Any wire pushing to Z that's not an xor and is not the final entry
     if (result[0] == 'z' && op != 'XOR' && result !== `z${maxZ}`) {
       wrongs.push(result);
