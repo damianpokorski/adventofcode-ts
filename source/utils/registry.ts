@@ -35,7 +35,11 @@ export interface Options {
   verbose?: boolean;
   isTest?: boolean;
 }
-export type Solution = (part: Part, input: string[], options: Options) => Promise<string | number>;
+export type Solution = (
+  part: Part,
+  input: string[],
+  options: Options
+) => Promise<string | number | undefined>;
 
 /** Naughty global state for convenient */
 export const registry = {} as Record<Years, Record<Days, Solution>>;

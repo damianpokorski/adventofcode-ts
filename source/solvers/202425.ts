@@ -23,14 +23,11 @@ initialize(__filename, async (part, input) => {
     .filter((rows) => rows[rows.length - 1].split('').every((char) => char == '#'))
     .map(digitize);
 
-  console.log(locks, keys);
-
   return locks
     .map((lock) => {
       return keys
         .map((key) => {
           const fit = lock.zip(key).map(([lockHeight, keyHeight]) => lockHeight + keyHeight);
-          console.log(`Lock ${lock.join(',')} and key ${key.join(',')}: ${fit.join(',')}`);
           // return fit.every((column) => column == fit[0]) ? 1 : 0;
           return fit.every((column) => column < 6);
         })

@@ -2,15 +2,16 @@ import { Argument, Option, program } from 'commander';
 import { cpSync, existsSync, readFileSync, writeFileSync } from 'fs';
 import { terminal } from 'terminal-kit';
 import './solvers';
-import { Days, executeTest, getRegistryItems, Part, Years } from './utils';
+import { Days, error, executeTest, getRegistryItems, info, Part, silence, Years } from './utils';
 export * from './utils/registry';
-
 export const command = (command: string[]) => {
   return program
     .name('adventofcode')
     .command('solve')
     .description('Begins solving specific advent of code issue')
-    .addArgument(new Argument('<year>', 'Year to pick puzzles from').choices(['2023', '2024']).argOptional())
+    .addArgument(
+      new Argument('<year>', 'Year to pick puzzles from').choices(['2015', '2023', '2024']).argOptional()
+    )
     .addArgument(
       new Argument('<day>', 'Day to solve puzle off')
         .choices([...new Array(25)].map((_, i) => (i + 1).toString()))
@@ -21,7 +22,7 @@ export const command = (command: string[]) => {
       new Option('--tests-required', 'Requires tests to run before executing against real data').default(true)
     )
     .addOption(new Option('--no-tests-required', 'Does not require tests to be passing before running'))
-    .addOption(new Option('--verbose', 'Adds extra logging flag to the puzzle solvers').default(false))
+    .addOption(new Option('--verbose', 'Adds extra infoging flag to the puzzle solvers').default(false))
     .action(
       async (
         selectedYear: Years,
@@ -40,13 +41,11 @@ export const command = (command: string[]) => {
 
         // If no solvers found in registry, create a new solver from template
         if (puzzles.length == 0 && selectedYear !== '.' && selectedDay !== '.') {
-          console.log(
-            `Failed to find solution for ${selectedYear}/${selectedDay} Part: ${parts.join(',')}... `
-          );
+          info(`Failed to find solution for ${selectedYear}/${selectedDay} Part: ${parts.join(',')}... `);
           const solutionFile = `./source/solvers/${selectedYear}${selectedDay.toString().padStart(2, '0')}.ts`;
           if (!existsSync(solutionFile)) {
             cpSync(`./source/solvers/TEMPLATE`, solutionFile);
-            console.log(`Created a new placeholder entry for missing puzzle`);
+            info(`Created a new placeholder entry for missing puzzle`);
           }
         }
 
@@ -56,7 +55,7 @@ export const command = (command: string[]) => {
           const path = `./.input/${year}${day.toString().padStart(2, '0')}.txt`;
 
           if (!existsSync(path)) {
-            console.error(`No puzzle file found in: ${path} creating empty`);
+            error(`No puzzle file found in: ${path} creating empty`);
             writeFileSync(path, '', { encoding: 'utf-8' });
             continue;
           }
@@ -65,7 +64,9 @@ export const command = (command: string[]) => {
           for (const currentPart of parts) {
             // Run the test
             const startTest = performance.now();
+            silence(options.verbose == false);
             const testResult = await executeTest(year, day, currentPart, options);
+            silence(false);
             const testDuration = (performance.now() - startTest).toFixed(2);
 
             const skipped = !(
@@ -74,10 +75,12 @@ export const command = (command: string[]) => {
             );
 
             // Run the solver
+            silence(options.verbose == false);
             const start = performance.now();
             const result = (
               await (!skipped ? solution(currentPart, data, options) : Promise.resolve('Skipped'))
             ).toString();
+            silence(false);
             const duration = (performance.now() - start).toFixed(2);
 
             // Tabulate

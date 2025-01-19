@@ -27,6 +27,15 @@ declare global {
      * @param keyGenerator - generates a key to be used in a dashmap
      */
     groupBy<U extends string | number>(keyGenerator: (value: T) => U): Record<U, T[]>;
+
+    /**
+     * Returns array result in form of pairs, i.e. for:
+     * [1,2,3,4,5]
+     * [[1,2], [2,3], [3,4], [4,5]]
+     */
+    pairwise(): [T, T][];
+
+    abortable<U>(fn: (self: T[]) => U): U | undefined;
   }
 
   interface String {
@@ -86,5 +95,33 @@ if (!Array.prototype.groupBy) {
     }
 
     return groups;
+  };
+}
+
+if (!Array.prototype.pairwise) {
+  Array.prototype.pairwise = function <T>(): [T, T][] {
+    return this.map((_, index) => [this[index - 1], this[index]]).slice(1) as [T, T][];
+  };
+}
+
+export class EarlyReturn<T> extends Error {
+  constructor(public value: T) {
+    super();
+  }
+}
+
+if (!Array.prototype.abortable) {
+  Array.prototype.abortable = function <T, U>(fn: (self: T[]) => U): U | undefined {
+    try {
+      // Run inner call
+      return fn(this);
+    } catch (error) {
+      // Capture early return value
+      if (error instanceof EarlyReturn) {
+        return error.value as U;
+      }
+      // Anything else is rethrown
+      throw error;
+    }
   };
 }
