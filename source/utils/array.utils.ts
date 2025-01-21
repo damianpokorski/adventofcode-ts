@@ -36,6 +36,14 @@ declare global {
     pairwise(): [T, T][];
 
     abortable<U>(fn: (self: T[]) => U): U | undefined;
+    // abortableReduce(
+    //   callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T,
+    //   initialValue?: T
+    // ): T;
+    abortableReduce<U>(
+      callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U,
+      initialValue: U
+    ): U;
   }
 
   interface String {
@@ -123,5 +131,16 @@ if (!Array.prototype.abortable) {
       // Anything else is rethrown
       throw error;
     }
+  };
+}
+
+if (!Array.prototype.abortableReduce) {
+  Array.prototype.abortableReduce = function <T, U>(
+    callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U,
+    initialValue: U
+  ): U {
+    return this.abortable((self) => {
+      return self.reduce(callbackfn, initialValue);
+    });
   };
 }

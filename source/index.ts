@@ -10,7 +10,9 @@ export const command = (command: string[]) => {
     .command('solve')
     .description('Begins solving specific advent of code issue')
     .addArgument(
-      new Argument('<year>', 'Year to pick puzzles from').choices(['2015', '2023', '2024']).argOptional()
+      new Argument('<year>', 'Year to pick puzzles from')
+        .choices(['2015', '2016', '2023', '2024'])
+        .argOptional()
     )
     .addArgument(
       new Argument('<day>', 'Day to solve puzle off')
@@ -43,9 +45,11 @@ export const command = (command: string[]) => {
         if (puzzles.length == 0 && selectedYear !== '.' && selectedDay !== '.') {
           info(`Failed to find solution for ${selectedYear}/${selectedDay} Part: ${parts.join(',')}... `);
           const solutionFile = `./source/solvers/${selectedYear}${selectedDay.toString().padStart(2, '0')}.ts`;
+          const puzzleFile = `./.input/${selectedYear}${selectedDay.toString().padStart(2, '0')}.txt`;
           if (!existsSync(solutionFile)) {
             cpSync(`./source/solvers/TEMPLATE`, solutionFile);
-            info(`Created a new placeholder entry for missing puzzle`);
+            writeFileSync(puzzleFile, '', { encoding: 'utf-8' });
+            info(`Created a new placeholder entry for missing puzzle & empty puzzle file`);
           }
         }
 

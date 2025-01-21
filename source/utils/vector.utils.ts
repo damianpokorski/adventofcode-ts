@@ -46,6 +46,16 @@ export class Vector {
       }[value] ?? Vector.Zero;
     return new Vector(x, y);
   }
+  static fromUDLR(value: string) {
+    const { x, y } =
+      {
+        U: Vector.Up,
+        D: Vector.Down,
+        L: Vector.Left,
+        R: Vector.Right
+      }[value] ?? Vector.Zero;
+    return new Vector(x, y);
+  }
   toChar() {
     if (this.equals(Vector.Up)) {
       return '^';
