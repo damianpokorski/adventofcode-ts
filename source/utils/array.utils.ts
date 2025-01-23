@@ -35,15 +35,21 @@ declare global {
      */
     pairwise(): [T, T][];
 
+    /**
+     * Abortable high order functions, just pure convenience :)
+     */
     abortable<U>(fn: (self: T[]) => U): U | undefined;
-    // abortableReduce(
-    //   callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T,
-    //   initialValue?: T
-    // ): T;
+
     abortableReduce<U>(
       callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U,
       initialValue: U
     ): U;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    abortableMap<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[];
+
+    // Had enough writing map -> parseInt
+    fromStringToNumberArray(): number[];
   }
 
   interface String {
@@ -85,6 +91,12 @@ if (!Array.prototype.zip) {
 if (!Array.prototype.sum) {
   Array.prototype.sum = function <T extends number>() {
     return this.reduce((a, b) => a + b, 0) as T;
+  };
+}
+
+if (!Array.prototype.fromStringToNumberArray) {
+  Array.prototype.fromStringToNumberArray = function () {
+    return this.map((value) => parseInt(value)) as number[];
   };
 }
 
@@ -142,5 +154,15 @@ if (!Array.prototype.abortableReduce) {
     return this.abortable((self) => {
       return self.reduce(callbackfn, initialValue);
     });
+  };
+}
+
+if (!Array.prototype.abortableMap) {
+  Array.prototype.abortableMap = function <T, U>(
+    callbackfn: (value: T, index: number, array: T[]) => U
+  ): U[] {
+    return this.abortable((self) => {
+      return self.map(callbackfn);
+    }) as U[];
   };
 }
