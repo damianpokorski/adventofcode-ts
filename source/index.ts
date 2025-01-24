@@ -11,7 +11,7 @@ export const command = (command: string[]) => {
     .description('Begins solving specific advent of code issue')
     .addArgument(
       new Argument('<year>', 'Year to pick puzzles from')
-        .choices(['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'])
+        .choices(['.', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'])
         .argOptional()
     )
     .addArgument(
@@ -34,10 +34,7 @@ export const command = (command: string[]) => {
       ) => {
         // Flatter registry
         const puzzles = getRegistryItems((year, day) => {
-          return (
-            (selectedYear == undefined || selectedYear == year) &&
-            (selectedDay == undefined || selectedDay == day)
-          );
+          return [undefined, '.', year].includes(selectedYear) && [undefined, '.', day].includes(selectedDay);
         });
         const parts = (part == undefined ? [1, 2] : [part]) as Part[];
 

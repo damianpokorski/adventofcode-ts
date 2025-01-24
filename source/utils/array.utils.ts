@@ -40,6 +40,8 @@ declare global {
      */
     pairwise(): [T, T][];
 
+    consoleLogItems(message?: string | null): T[];
+
     /**
      * Abortable high order functions, just pure convenience :)
      */
@@ -202,5 +204,17 @@ if (!Array.prototype.combinations) {
 if (!Array.prototype.permutations) {
   Array.prototype.permutations = function <T>(size: number): Obliterated<T[]> {
     return obliterated(permutations<T>(this, size));
+  };
+}
+
+if (!Array.prototype.consoleLogItems) {
+  Array.prototype.consoleLogItems = function <T>(message: null | string): T[] {
+    if (message) {
+      console.log(message);
+    }
+    return this.map((item) => {
+      console.log(item);
+      return item;
+    });
   };
 }
