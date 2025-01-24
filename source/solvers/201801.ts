@@ -11,7 +11,7 @@ initialize(__filename, async (part, input) => {
   // Part 2 - Store visited
   const observedFrequencies = new Set<number>();
 
-  // Part 1 - sum, part 2 - first repeat
+  // Part 1 - sum, part 2 - first repeat, keep looping until found
   while (part == 1 ? observedFrequencies.size == 0 : true) {
     for (const value of changes) {
       frequency += value;

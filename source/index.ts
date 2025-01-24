@@ -81,9 +81,9 @@ export const command = (command: string[]) => {
             // Run the solver
             silence(options.verbose == false);
             const start = performance.now();
-            const result = (
-              await (!skipped ? solution(currentPart, data, options) : Promise.resolve('Skipped'))
-            ).toString();
+            const result = skipped
+              ? 'Skipped'
+              : ((await solution(currentPart, data, options)) ?? '').toString();
             silence(false);
             const duration = (performance.now() - start).toFixed(2);
 
@@ -92,7 +92,7 @@ export const command = (command: string[]) => {
               `${year}`,
               `${day}`,
               `${currentPart}`,
-              testResult == true ? `✅ ${testDuration}ms` : testResult == false ? '❌' : '',
+              testResult == true ? `🟩 ${testDuration}ms` : testResult == false ? '🟥' : '',
               !skipped ? `${duration}ms` : '',
               result
             ]);

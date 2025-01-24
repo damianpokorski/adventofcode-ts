@@ -1,5 +1,10 @@
 // All of the utils files break conventions :) But it's fun
 
+import { combinations, filter, find, map, permutations } from 'obliterator';
+import { PredicateFunction } from 'obliterator/filter';
+import { MapFunction } from 'obliterator/map';
+import { IntoInterator } from 'obliterator/types';
+
 export {};
 
 // Array extensions -  a bit naughty but it's just convenient
@@ -50,6 +55,9 @@ declare global {
 
     // Had enough writing map -> parseInt
     fromStringToNumberArray(): number[];
+
+    combinations(size: number): Obliterated<T[]>;
+    permutations(size: number): Obliterated<T[]>;
   }
 
   interface String {
@@ -164,5 +172,35 @@ if (!Array.prototype.abortableMap) {
     return this.abortable((self) => {
       return self.map(callbackfn);
     }) as U[];
+  };
+}
+
+/**
+ * Extending array definitions with funky iterators :)
+ */
+interface Obliterated<T> {
+  get: () => IntoInterator<T>;
+  filter: (predicate: PredicateFunction<T>) => IterableIterator<T>;
+  find: (predicate: PredicateFunction<T>) => T | undefined;
+  map: <U>(predicate: MapFunction<T, U>) => IterableIterator<U>;
+}
+
+const obliterated = <T>(it: IntoInterator<T>) => {
+  return {
+    get: () => it,
+    filter: (predicate: PredicateFunction<T>) => filter(it, predicate),
+    find: (predicate: PredicateFunction<T>) => find(it, predicate),
+    map: <U>(predicate: MapFunction<T, U>) => map(it, predicate)
+  } as Obliterated<T>;
+};
+
+if (!Array.prototype.combinations) {
+  Array.prototype.combinations = function <T>(size: number): Obliterated<T[]> {
+    return obliterated(combinations<T>(this, size));
+  };
+}
+if (!Array.prototype.permutations) {
+  Array.prototype.permutations = function <T>(size: number): Obliterated<T[]> {
+    return obliterated(permutations<T>(this, size));
   };
 }

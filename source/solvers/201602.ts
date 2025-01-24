@@ -12,11 +12,11 @@ initialize(__filename, async (part, input) => {
           [7, 8, 9]
         ]
       : [
-          [undefined, undefined, 1, undefined, undefined],
-          [undefined, 2, 3, 4, undefined, undefined],
+          [null, null, 1, null, null],
+          [null, 2, 3, 4, null, null],
           [5, 6, 7, 8, 9],
-          [undefined, 'A', 'B', 'C', undefined, undefined],
-          [undefined, undefined, 'D', undefined, undefined]
+          [null, 'A', 'B', 'C', null, null],
+          [null, null, 'D', null, null]
         ];
   let startPoint = part == 1 ? new Vector(1, 1) : new Vector(0, 2);
 
@@ -28,7 +28,7 @@ initialize(__filename, async (part, input) => {
         .map((cell) => Vector.fromUDLR(cell))
         .reduce((position, nextStep) => {
           // Only move if the next step is valid
-          if (position.add(nextStep).getGridValue(grid) !== undefined) {
+          if (position.add(nextStep).getGridValue(grid)) {
             return position.add(nextStep);
           }
           return position;
