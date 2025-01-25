@@ -8,11 +8,9 @@ initialize(__filename, async (part, input) => {
       input
         .map((line) => {
           // Split to letters, group by those letters, then extra lengths of those repeated letters
-          const duplicateSizes: number[] = line
-            .split('')
-            .groupBy((character) => character)
-            .toObjectEntries()
-            .map(([_, occurences]) => occurences.length);
+          const duplicateSizes: number[] = Object.entries(
+            line.split('').groupBy((character) => character)
+          ).map(([_, occurences]) => occurences.length);
 
           return [duplicateSizes.includes(2) ? 1 : 0, duplicateSizes.includes(3) ? 1 : 0];
         })
