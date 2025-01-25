@@ -56,6 +56,9 @@ export class Vector {
       }[value] ?? Vector.Zero;
     return new Vector(x, y);
   }
+  static fromSingle(value: number) {
+    return new Vector(value, value);
+  }
   toChar() {
     if (this.equals(Vector.Up)) {
       return '^';
