@@ -103,6 +103,18 @@ export class Vector {
   adjecents() {
     return [this.add(Vector.Up), this.add(Vector.Right), this.add(Vector.Down), this.add(Vector.Left)];
   }
+  omnidirectionalAdjecents() {
+    return [
+      this.add(Vector.Up),
+      this.add(Vector.Up).add(Vector.Right),
+      this.add(Vector.Up).add(Vector.Left),
+      this.add(Vector.Right),
+      this.add(Vector.Down),
+      this.add(Vector.Down).add(Vector.Left),
+      this.add(Vector.Down).add(Vector.Right),
+      this.add(Vector.Left)
+    ];
+  }
 
   isHorizontal() {
     return this.x !== 0 && this.y == 0;
