@@ -17,7 +17,7 @@ initialize(__filename, async (part, input) => {
 
   const distance = (corruptions: number) => {
     // Create grid
-    const grid = Grid.createAndFill(gridSize + 1, gridSize + 1, true as boolean);
+    const grid = Grid.createAndFill(gridSize + 1, gridSize + 1, () => true as boolean);
     const gridRaw = grid.array;
 
     for (const { x, y } of walls.slice(0, corruptions)) {

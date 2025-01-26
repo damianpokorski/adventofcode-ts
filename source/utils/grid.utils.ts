@@ -44,8 +44,16 @@ export class Grid<T extends object | string | number | boolean> {
     return output;
   }
 
-  static createAndFill<T extends object | string | number | boolean>(x: number, y: number, value: T) {
-    return new Grid<T>([...new Array(y)].map(() => [...new Array(x)].map(() => value)));
+  static createAndFill<T extends object | string | number | boolean>(
+    x: number,
+    y: number,
+    valueFactory: (vector: Vector) => T
+  ) {
+    return new Grid<T>(
+      [...new Array(y)].map((yIndex) =>
+        [...new Array(x)].map((xIndex) => valueFactory(new Vector(xIndex, yIndex)))
+      )
+    );
   }
 
   static fromStrings(input: string[]) {
