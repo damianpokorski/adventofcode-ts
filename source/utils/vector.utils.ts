@@ -36,25 +36,31 @@ export class Vector {
     return [thisRepeats, secondVectorRepeats];
   }
 
-  static fromChar(value: string) {
+  static fromChar(
+    value: string,
+    directions: { up: string; down: string; left: string; right: string } = {
+      up: '^',
+      down: 'v',
+      left: '<',
+      right: '>'
+    }
+  ) {
     const { x, y } =
       {
-        '^': Vector.Up,
-        v: Vector.Down,
-        '<': Vector.Left,
-        '>': Vector.Right
+        [directions.up]: Vector.Up,
+        [directions.down]: Vector.Down,
+        [directions.left]: Vector.Left,
+        [directions.right]: Vector.Right
       }[value] ?? Vector.Zero;
     return new Vector(x, y);
   }
   static fromUDLR(value: string) {
-    const { x, y } =
-      {
-        U: Vector.Up,
-        D: Vector.Down,
-        L: Vector.Left,
-        R: Vector.Right
-      }[value] ?? Vector.Zero;
-    return new Vector(x, y);
+    return Vector.fromChar(value, {
+      up: 'U',
+      down: 'D',
+      left: 'L',
+      right: 'R'
+    });
   }
   static fromSingle(value: number) {
     return new Vector(value, value);
