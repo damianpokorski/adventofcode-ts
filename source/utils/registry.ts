@@ -171,7 +171,7 @@ export class RegistryHelper {
     expectedOutputPart2?: string | number | undefined
   ) {
     addTest(this.filename, 1, input, expectedOutputPart1.toString());
-    if (expectedOutputPart2) {
+    if (expectedOutputPart2 !== undefined) {
       addTest(this.filename, 2, input, expectedOutputPart2.toString());
     }
     return this;
