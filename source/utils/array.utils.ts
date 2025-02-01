@@ -33,6 +33,8 @@ declare global {
      */
     groupBy<U extends string | number>(keyGenerator: (value: T) => U): Record<U, T[]>;
 
+    groupByToEntries<U extends string | number>(keyGenerator: (value: T) => U): [U, T[]][];
+
     /**
      * Returns array result in form of pairs, i.e. for:
      * [1,2,3,4,5]
@@ -128,6 +130,13 @@ if (!Array.prototype.groupBy) {
   };
 }
 
+if (!Array.prototype.groupByToEntries) {
+  Array.prototype.groupByToEntries = function <T, U extends string | number>(
+    keyGenerator: (arg: T) => U
+  ): [U, T[]][] {
+    return Object.entries(this.groupBy(keyGenerator)) as [U, T[]][];
+  };
+}
 if (!Array.prototype.pairwise) {
   Array.prototype.pairwise = function <T>(): [T, T][] {
     return this.map((_, index) => [this[index - 1], this[index]]).slice(1) as [T, T][];
