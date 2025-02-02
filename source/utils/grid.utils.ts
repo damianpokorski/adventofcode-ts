@@ -59,4 +59,8 @@ export class Grid<T extends object | string | number | boolean> {
   static fromStrings(input: string[]) {
     return new Grid(input.map((row) => row.split('')));
   }
+
+  transpose() {
+    return new Grid(this.array[0].map((col, c) => this.array.map((row, r) => this.array[r][c])));
+  }
 }
