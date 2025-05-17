@@ -3,7 +3,9 @@ import { Vector } from '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
-  const grid = input.map((row) => row.split('').map((height) => parseInt(height, 10) ?? 0));
+  const grid = input.map((row) =>
+    row.split('').map((height) => parseInt(height, 10) ?? 0)
+  );
   const vGrid = input
     .map((row, y) => row.split('').map((_, x) => new Vector(x, y)))
     .reduce((a, b) => [...a, ...b], []);
@@ -19,7 +21,8 @@ initialize(__filename, async (part, input) => {
     // While we have paths or
     while (
       paths.length > 0 &&
-      paths.every((path) => path[path.length - 1].getGridValue(grid) == 9) == false
+      paths.every((path) => path[path.length - 1].getGridValue(grid) == 9) ==
+        false
     ) {
       // Grab most recent path
       const path = paths.shift();
@@ -37,7 +40,9 @@ initialize(__filename, async (part, input) => {
         const currentHeight = head.getGridValue(grid);
         const nextheight = adjecent.getGridValue(grid);
         const validNext =
-          currentHeight !== undefined && nextheight !== undefined && currentHeight + 1 == nextheight;
+          currentHeight !== undefined &&
+          nextheight !== undefined &&
+          currentHeight + 1 == nextheight;
         // We continue the path!
         if (validNext) {
           paths.push([...path, adjecent]);
@@ -45,7 +50,9 @@ initialize(__filename, async (part, input) => {
       }
     }
 
-    const score = paths.map((x) => (part == 1 ? x[x.length - 1] : x).toString()).distinct().length;
+    const score = paths
+      .map((x) => (part == 1 ? x[x.length - 1] : x).toString())
+      .distinct().length;
     scores.push(score);
   }
 

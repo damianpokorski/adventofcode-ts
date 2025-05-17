@@ -18,7 +18,8 @@ initialize(__filename, async (part, input) => {
   // Part 1: Sum Vectors up
   if (part == 1) {
     const { x, y } = instructions.reduce(
-      (position, [direction, distance]) => position.add(direction.multiply(Vector.fromSingle(distance))),
+      (position, [direction, distance]) =>
+        position.add(direction.multiply(Vector.fromSingle(distance))),
       Vector.Zero
     );
     return x * y;

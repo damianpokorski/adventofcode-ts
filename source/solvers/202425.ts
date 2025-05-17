@@ -18,16 +18,22 @@ initialize(__filename, async (part, input) => {
     return sums;
   };
 
-  const locks = keysAndLocks.filter((rows) => rows[0].split('').every((char) => char == '#')).map(digitize);
+  const locks = keysAndLocks
+    .filter((rows) => rows[0].split('').every((char) => char == '#'))
+    .map(digitize);
   const keys = keysAndLocks
-    .filter((rows) => rows[rows.length - 1].split('').every((char) => char == '#'))
+    .filter((rows) =>
+      rows[rows.length - 1].split('').every((char) => char == '#')
+    )
     .map(digitize);
 
   return locks
     .map((lock) => {
       return keys
         .map((key) => {
-          const fit = lock.zip(key).map(([lockHeight, keyHeight]) => lockHeight + keyHeight);
+          const fit = lock
+            .zip(key)
+            .map(([lockHeight, keyHeight]) => lockHeight + keyHeight);
           // return fit.every((column) => column == fit[0]) ? 1 : 0;
           return fit.every((column) => column < 6);
         })

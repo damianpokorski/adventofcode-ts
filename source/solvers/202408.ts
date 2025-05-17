@@ -33,8 +33,12 @@ initialize(__filename, async (part, input) => {
           if (part == 2) {
             antifrequencies.push(self);
             // Keep incrementing magnitude unti we're out of bounds
-            while (!isOutOfBounds(antifrequencies[antifrequencies.length - 1])) {
-              antifrequencies.push(antifrequencies[antifrequencies.length - 1].add(magnitude));
+            while (
+              !isOutOfBounds(antifrequencies[antifrequencies.length - 1])
+            ) {
+              antifrequencies.push(
+                antifrequencies[antifrequencies.length - 1].add(magnitude)
+              );
             }
           }
         }

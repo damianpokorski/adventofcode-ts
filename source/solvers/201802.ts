@@ -12,7 +12,10 @@ initialize(__filename, async (part, input) => {
             line.split('').groupBy((character) => character)
           ).map(([_, occurences]) => occurences.length);
 
-          return [duplicateSizes.includes(2) ? 1 : 0, duplicateSizes.includes(3) ? 1 : 0];
+          return [
+            duplicateSizes.includes(2) ? 1 : 0,
+            duplicateSizes.includes(3) ? 1 : 0
+          ];
         })
         // Sum tuples
         .reduce(([a, b], [c, d]) => [a + c, b + d], [0, 0])
@@ -42,5 +45,13 @@ initialize(__filename, async (part, input) => {
   });
   return buffer;
 })
-  .test(1, [`abcdef`, `bababc`, `abbcde`, `abcccd`, `aabcdd`, `abcdee`, `ababab`], 12)
-  .test(2, [`abcde`, `fghij`, `klmno`, `pqrst`, `fguij`, `axcye`, `wvxyz`], 'fgij');
+  .test(
+    1,
+    [`abcdef`, `bababc`, `abbcde`, `abcccd`, `aabcdd`, `abcdee`, `ababab`],
+    12
+  )
+  .test(
+    2,
+    [`abcde`, `fghij`, `klmno`, `pqrst`, `fguij`, `axcye`, `wvxyz`],
+    'fgij'
+  );

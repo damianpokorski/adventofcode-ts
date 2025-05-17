@@ -66,7 +66,11 @@ const part1 = (rows: string[]) => {
         let adjecents = [] as string[];
         for (let digit = 0; digit < currentDigit.length; digit++) {
           // Extract all of the adjectents next to our digits
-          const neighbours = getAdjecent(rows as unknown as string[][], x - digit - 1, y);
+          const neighbours = getAdjecent(
+            rows as unknown as string[][],
+            x - digit - 1,
+            y
+          );
           adjecents = [...adjecents, ...neighbours];
         }
         // filter out undefineds, non numbers, and non dots
@@ -104,10 +108,18 @@ const part2 = (rows: string[]) => {
 
       // Check if we're looking at the digit - store it
       if (currentCharacter == '*') {
-        const top = [(rows[y - 1] ?? [])[x - 1], (rows[y - 1] ?? [])[x], (rows[y - 1] ?? [])[x + 1]];
+        const top = [
+          (rows[y - 1] ?? [])[x - 1],
+          (rows[y - 1] ?? [])[x],
+          (rows[y - 1] ?? [])[x + 1]
+        ];
         const left = (rows[y] ?? [])[x - 1];
         const right = (rows[y] ?? [])[x + 1];
-        const down = [(rows[y + 1] ?? [])[x - 1], (rows[y + 1] ?? [])[x], (rows[y + 1] ?? [])[x + 1]];
+        const down = [
+          (rows[y + 1] ?? [])[x - 1],
+          (rows[y + 1] ?? [])[x],
+          (rows[y + 1] ?? [])[x + 1]
+        ];
 
         // Check if we have exactly two part numbers
         const hasDigits = {
@@ -124,13 +136,18 @@ const part2 = (rows: string[]) => {
         };
 
         // Shorthand to check exactly how much values we have available
-        const partNumbersAvailable = Object.values(hasDigits).reduce((a, b) => a + b, 0);
+        const partNumbersAvailable = Object.values(hasDigits).reduce(
+          (a, b) => a + b,
+          0
+        );
 
         // Only 2 gears are valid for ratios
         if (partNumbersAvailable == 2) {
           // Find first digit positions
-          const upOffsetX = x + top.findIndex((x) => !isNaN(x as unknown as number)) - 1;
-          const downOffsetX = x + down.findIndex((x) => !isNaN(x as unknown as number)) - 1;
+          const upOffsetX =
+            x + top.findIndex((x) => !isNaN(x as unknown as number)) - 1;
+          const downOffsetX =
+            x + down.findIndex((x) => !isNaN(x as unknown as number)) - 1;
 
           gearRatios.push(
             // Find numbers based on finder results
@@ -139,23 +156,48 @@ const part2 = (rows: string[]) => {
               ...(hasDigits.top == 1
                 ? [
                     [
-                      numberFinder(rows, upOffsetX, y - 1, { x: -1, y: 0 }, true),
-                      numberFinder(rows, upOffsetX, y - 1, { x: 1, y: 0 }, false).substring(1)
+                      numberFinder(
+                        rows,
+                        upOffsetX,
+                        y - 1,
+                        { x: -1, y: 0 },
+                        true
+                      ),
+                      numberFinder(
+                        rows,
+                        upOffsetX,
+                        y - 1,
+                        { x: 1, y: 0 },
+                        false
+                      ).substring(1)
                     ].join('')
                   ]
                 : []),
               ...(hasDigits.down == 1
                 ? [
                     [
-                      numberFinder(rows, downOffsetX, y + 1, { x: -1, y: 0 }, true),
-                      numberFinder(rows, downOffsetX, y + 1, { x: 1, y: 0 }).substring(1)
+                      numberFinder(
+                        rows,
+                        downOffsetX,
+                        y + 1,
+                        { x: -1, y: 0 },
+                        true
+                      ),
+                      numberFinder(rows, downOffsetX, y + 1, {
+                        x: 1,
+                        y: 0
+                      }).substring(1)
                     ].join('')
                   ]
                 : []),
               // Left side
-              ...(hasDigits.left ? [numberFinder(rows, x - 1, y, { x: -1, y: 0 }, true)] : []),
+              ...(hasDigits.left
+                ? [numberFinder(rows, x - 1, y, { x: -1, y: 0 }, true)]
+                : []),
               // Right side
-              ...(hasDigits.right ? [numberFinder(rows, x + 1, y, { x: 1, y: 0 })] : []),
+              ...(hasDigits.right
+                ? [numberFinder(rows, x + 1, y, { x: 1, y: 0 })]
+                : []),
               // Top with two separated digits
               ...(hasDigits.top == 2
                 ? [

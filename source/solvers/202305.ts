@@ -2,12 +2,24 @@ import '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
-  const lookup = {} as Record<string, Record<string, ((input: number) => number | null)[]>>;
+  const lookup = {} as Record<
+    string,
+    Record<string, ((input: number) => number | null)[]>
+  >;
   let seeds: number[] = [];
   const maps = new Set<string>();
 
-  const makeMapper = (from: number, destinationStart: number, range: number) => {
-    console.log({ from, destinationStart, range, offset: destinationStart - from });
+  const makeMapper = (
+    from: number,
+    destinationStart: number,
+    range: number
+  ) => {
+    console.log({
+      from,
+      destinationStart,
+      range,
+      offset: destinationStart - from
+    });
     return (v: number) => {
       if (v >= from && v < from + range) {
         console.log({ from, destinationStart, range });
@@ -34,7 +46,9 @@ initialize(__filename, async (part, input) => {
 
     // Build a stack of mappers
     lookup[source] = lookup[source] ? lookup[source] : {};
-    lookup[source][destination] = lookup[source][destination] ? lookup[source][destination] : [];
+    lookup[source][destination] = lookup[source][destination]
+      ? lookup[source][destination]
+      : [];
 
     for (const row of items) {
       const [from, to, range] = row.split(' ').map((v) => parseInt(v, 10));

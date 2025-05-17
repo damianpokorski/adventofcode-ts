@@ -7,7 +7,12 @@ initialize(__filename, async (part, input, opts) => {
     digits[1] = noun;
     digits[2] = verb;
     for (let i = 0; i < digits.length; i += 4) {
-      const [opCode, a, b, c] = [digits[i], digits[i + 1], digits[i + 2], digits[i + 3]];
+      const [opCode, a, b, c] = [
+        digits[i],
+        digits[i + 1],
+        digits[i + 2],
+        digits[i + 3]
+      ];
       if (opCode == 1) {
         digits[c] = digits[a] + digits[b];
       } else if (opCode == 2) {

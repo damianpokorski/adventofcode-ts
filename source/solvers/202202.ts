@@ -26,7 +26,8 @@ initialize(__filename, async (part, input) => {
     }
   };
 
-  const abcToMove = (value: string) => ({ A: Move.ROCK, B: Move.PAPER, C: Move.SCISSOR })[value]!;
+  const abcToMove = (value: string) =>
+    ({ A: Move.ROCK, B: Move.PAPER, C: Move.SCISSOR })[value]!;
 
   return (
     input
@@ -47,14 +48,20 @@ initialize(__filename, async (part, input) => {
               Z: 0
             }[me] ?? 0;
 
-          me = Object.entries(breakdown[abcToMove(other)]).find(([_, value]) => value == expectedScore)![0];
+          me = Object.entries(breakdown[abcToMove(other)]).find(
+            ([_, value]) => value == expectedScore
+          )![0];
         }
 
         // Convert ABCs to move Tuples
         return [abcToMove(other), abcToMove(me)] as [Move, Move];
       })
       // Tally up points using breakdown table
-      .map(([other, me]) => breakdown[me][other] + { [Move.ROCK]: 1, [Move.PAPER]: 2, [Move.SCISSOR]: 3 }[me])
+      .map(
+        ([other, me]) =>
+          breakdown[me][other] +
+          { [Move.ROCK]: 1, [Move.PAPER]: 2, [Move.SCISSOR]: 3 }[me]
+      )
       .sum()
   );
 }).tests(

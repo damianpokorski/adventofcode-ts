@@ -8,7 +8,9 @@ initialize(__filename, async (part, input) => {
       // Wrapping paper
       if (part == 1) {
         const surfaces = [l * w, w * h, h * l];
-        return Math.min(...surfaces) + surfaces.map((surface) => surface * 2).sum();
+        return (
+          Math.min(...surfaces) + surfaces.map((surface) => surface * 2).sum()
+        );
       }
       // Decorations
       const ribbon =

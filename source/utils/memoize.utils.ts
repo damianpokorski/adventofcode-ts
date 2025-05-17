@@ -1,4 +1,7 @@
-export const memoize = <T, U>(fn: (arg: T) => U, hashMethod?: (arg: T) => string): ((arg: T) => U) => {
+export const memoize = <T, U>(
+  fn: (arg: T) => U,
+  hashMethod?: (arg: T) => string
+): ((arg: T) => U) => {
   const cache = new Map<string, U>();
   if (hashMethod == undefined) {
     hashMethod = (arg: T) => `${arg}`;

@@ -31,7 +31,9 @@ initialize(__filename, async (part, input, opts) => {
     // Skipping over 12 walls, for example can save any number of steps, but we need to the steps we've noclipped on
     for (const [otherHash, saved] of path
       // Find Paths overlapping with radius
-      .filter((other) => path[index].gridDistance(other) <= (part == 1 ? 2 : 20))
+      .filter(
+        (other) => path[index].gridDistance(other) <= (part == 1 ? 2 : 20)
+      )
       // Calculate distance saved
       .map(
         (other) =>

@@ -21,8 +21,12 @@ initialize(__filename, async (part, input) => {
           .map((numberString) => parseInt(numberString, 10))
           .filter((value) => !isNaN(value))
       );
-      const elvesWinningNumbers = elvesNumbers.filter((elvesNumber) => winningNumbers.includes(elvesNumber));
-      const elvesPoints = Math.floor(elvesWinningNumbers.reduce((totalPoints) => totalPoints * 2, 1) / 2);
+      const elvesWinningNumbers = elvesNumbers.filter((elvesNumber) =>
+        winningNumbers.includes(elvesNumber)
+      );
+      const elvesPoints = Math.floor(
+        elvesWinningNumbers.reduce((totalPoints) => totalPoints * 2, 1) / 2
+      );
 
       // Store all of the scratch data - only for part 2
       scratches.push({
@@ -41,7 +45,10 @@ initialize(__filename, async (part, input) => {
   // Iterate through total cards & adjust card count based on score
   for (let i = 0; i < scratches.length; i++) {
     const scratch = scratches[i];
-    for (const followingScratch of scratches.slice(i + 1, i + 1 + scratch.matches)) {
+    for (const followingScratch of scratches.slice(
+      i + 1,
+      i + 1 + scratch.matches
+    )) {
       if (followingScratch) {
         followingScratch.cards = followingScratch.cards + scratch.cards;
       }

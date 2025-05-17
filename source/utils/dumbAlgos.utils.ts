@@ -16,8 +16,9 @@ export const floodFill = <T>(vector: Vector, getter: (v: Vector) => T) => {
     // Expand
     const expands = set
       // -> Filter to adjecent matching values & flatten
-      .map((cell) => cell.adjecents().filter((adjecent) => getter(adjecent) == value))
-      .flat()
+      .flatMap((cell) =>
+        cell.adjecents().filter((adjecent) => getter(adjecent) == value)
+      )
       .distinct((v) => v.hash())
       // -> Ignore ones already in our set
       .filter((cell) => !set.find((knownCell) => knownCell.equals(cell)));
@@ -61,7 +62,12 @@ export const shortestPath = <T>(
     // For each adjecent point
     for (const next of path.head.adjecents()) {
       // Do not go out of bounds
-      if (next.x < 0 || next.y < 0 || next.x >= gridSizeX || next.y >= gridSizeY) {
+      if (
+        next.x < 0 ||
+        next.y < 0 ||
+        next.x >= gridSizeX ||
+        next.y >= gridSizeY
+      ) {
         continue;
       }
 
@@ -79,7 +85,11 @@ export const shortestPath = <T>(
       seen.add(next.hash());
 
       // We add the next steop in paths
-      paths.add({ head: next, step: path.step + 1, route: [...path.route, next] });
+      paths.add({
+        head: next,
+        step: path.step + 1,
+        route: [...path.route, next]
+      });
     }
   }
   return { steps: Number.POSITIVE_INFINITY, route: [] };
@@ -96,7 +106,12 @@ export const allPaths = <T>(
   const gridSizeX = grid[0].length;
 
   // Build a queue and add a starting point
-  const paths = new Queue<{ head: Vector; step: number; route: Vector[]; seen: Set<number> }>();
+  const paths = new Queue<{
+    head: Vector;
+    step: number;
+    route: Vector[];
+    seen: Set<number>;
+  }>();
   paths.add({ head: start, step: 0, route: [start], seen: new Set() });
 
   let allPaths = [] as Vector[][];
@@ -110,7 +125,12 @@ export const allPaths = <T>(
     // For each adjecent point
     for (const next of path.head.adjecents()) {
       // Do not go out of bounds
-      if (next.x < 0 || next.y < 0 || next.x >= gridSizeX || next.y >= gridSizeY) {
+      if (
+        next.x < 0 ||
+        next.y < 0 ||
+        next.x >= gridSizeX ||
+        next.y >= gridSizeY
+      ) {
         continue;
       }
 

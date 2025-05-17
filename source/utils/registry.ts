@@ -1,4 +1,4 @@
-import { basename } from 'path';
+import { basename } from 'node:path';
 
 export type Years = 2023 | 2024 | '.';
 
@@ -45,7 +45,11 @@ export type Solution = (
 export const registry = {} as Record<Years, Record<Days, Solution>>;
 
 /** Registers new puzzle */
-export const register = (year: Years, day: Days, solution: Solution): Solution => {
+export const register = (
+  year: Years,
+  day: Days,
+  solution: Solution
+): Solution => {
   // Create year entry if it does not exist
   registry[year] = registry[year] ?? {};
 
@@ -54,13 +58,15 @@ export const register = (year: Years, day: Days, solution: Solution): Solution =
   return solution;
 };
 
-export const filenameToYear = (filename: string) => parseInt(basename(filename).substring(0, 4)) as Years;
-export const filenameToDay = (filename: string) => parseInt(basename(filename).substring(4, 6)) as Days;
+export const filenameToYear = (filename: string) =>
+  parseInt(basename(filename).substring(0, 4)) as Years;
+export const filenameToDay = (filename: string) =>
+  parseInt(basename(filename).substring(4, 6)) as Days;
 
 export const findUsingFilename = (filename: string): Solution => {
   const year = filenameToYear(filename);
   const day = filenameToDay(filename);
-  const match = registry[year] && registry[year][day];
+  const match = registry[year]?.[day];
   if (!match) {
     throw new Error(`Failed to find puzzle using filename ${filename}`);
   }
@@ -69,7 +75,7 @@ export const findUsingFilename = (filename: string): Solution => {
 export const findTestUsingFilename = (filename: string, part: Part) => {
   const year = filenameToYear(filename);
   const day = filenameToDay(filename);
-  const match = testRegistry[year] && testRegistry[year][day] && testRegistry[year][day][part];
+  const match = testRegistry[year]?.[day]?.[part];
   if (!match) {
     throw new Error(`Failed to find puzzle tests using filename ${filename}`);
   }
@@ -81,18 +87,28 @@ export const findTestUsingFilename = (filename: string, part: Part) => {
  * @param predicate
  * @returns
  */
-export const getRegistryItems = (predicate: (year: Years, day: Days) => boolean) => {
+export const getRegistryItems = (
+  predicate: (year: Years, day: Days) => boolean
+) => {
   return (
-    Object.entries(registry)
-      .map(([year, days]) => Object.entries(days).map(([day, fn]) => [year, day, fn]))
-      .flat() as [Years, Days, Solution][]
+    Object.entries(registry).flatMap(([year, days]) =>
+      Object.entries(days).map(([day, fn]) => [year, day, fn])
+    ) as [Years, Days, Solution][]
   ).filter(([year, day]) => predicate(year, day));
 };
 
 /** Registering test data */
 /* Year/Day/Part = [input[], expectedOutput] */
-export const testRegistry = {} as Record<Years, Record<Days, Record<Part, [string[], string]>>>;
-export const addTest = (filename: string, part: Part, input: string[], expectedResult: string) => {
+export const testRegistry = {} as Record<
+  Years,
+  Record<Days, Record<Part, [string[], string]>>
+>;
+export const addTest = (
+  filename: string,
+  part: Part,
+  input: string[],
+  expectedResult: string
+) => {
   const year = filenameToYear(filename);
   const day = filenameToDay(filename);
   // console.log({ filename, year, day, part, expectedResult });
@@ -109,7 +125,13 @@ export const addTest = (filename: string, part: Part, input: string[], expectedR
 };
 
 /** Runs registered solution if found */
-export const execute = async (year: Years, day: Days, part: Part, input: string[], opts: Options) => {
+export const execute = async (
+  year: Years,
+  day: Days,
+  part: Part,
+  input: string[],
+  opts: Options
+) => {
   if (!registry[year]) {
     throw new Error(`No solutions registered for year: ${year}`);
   }
@@ -122,7 +144,12 @@ export const execute = async (year: Years, day: Days, part: Part, input: string[
 };
 
 /** Runs registered solution if found */
-export const executeTest = async (year: Years, day: Days, part: Part, opts: Options) => {
+export const executeTest = async (
+  year: Years,
+  day: Days,
+  part: Part,
+  opts: Options
+) => {
   if (!registry[year]) {
     throw new Error(`No solutions registered for year: ${year}`);
   }
@@ -131,15 +158,19 @@ export const executeTest = async (year: Years, day: Days, part: Part, opts: Opti
   }
 
   // Execute test if available
-  if (testRegistry[year] && testRegistry[year][day] && testRegistry[year][day][part]) {
+  if (testRegistry[year]?.[day]?.[part]) {
     const [testInput, expectedResult] = testRegistry[year][day][part];
-    const testResult = await registry[year][day](part, testInput, { ...opts, isTest: true });
+    const testResult = await registry[year][day](part, testInput, {
+      ...opts,
+      isTest: true
+    });
     if (testResult == expectedResult) {
       return true;
-    } else {
-      console.log(`${year} / ${day} - Test failed - expected ${expectedResult} received ${testResult}`);
-      return false;
     }
+    console.log(
+      `${year} / ${day} - Test failed - expected ${expectedResult} received ${testResult}`
+    );
+    return false;
   }
   return undefined;
 };

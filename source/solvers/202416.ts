@@ -7,13 +7,12 @@ initialize(__filename, async (part, input) => {
   const grid = input.map((row) => row.split(''));
   const getGridValue = (search: string) =>
     grid
-      .map((row, y) =>
+      .flatMap((row, y) =>
         row.map((cell, x) => ({
           v: new Vector(x, y),
           cell
         }))
       )
-      .flat()
       .filter((cell) => cell.cell == search)
       .shift()?.v ?? Vector.Zero;
 
@@ -33,9 +32,10 @@ initialize(__filename, async (part, input) => {
   // Generating a fast hash for direction/facing comparison
   const hash = (path: Path) => (path.head.hash() << 4) + path.facing.hash();
 
-  const q = new PriorityQueue<Path>(6400, function (a: Path, b: Path) {
-    return a.score - b.score;
-  });
+  const q = new PriorityQueue<Path>(
+    6400,
+    (a: Path, b: Path) => a.score - b.score
+  );
 
   // Starting point
   q.add(new Path(0, start, Vector.Right, []));
@@ -72,12 +72,19 @@ initialize(__filename, async (part, input) => {
     // Add paths with appropiate costs
     // We can skip some iterations here by combining a turn with moving forwards into one - since one can't follow the other & two turns, means going back on itself
     for (const path of [
-      new Path(score + 1001, head.add(facing.turnCounterClockwise()), facing.turnCounterClockwise(), [
-        ...route,
-        head
-      ]),
+      new Path(
+        score + 1001,
+        head.add(facing.turnCounterClockwise()),
+        facing.turnCounterClockwise(),
+        [...route, head]
+      ),
       new Path(score + 1, head.add(facing), facing, [...route, head]),
-      new Path(score + 1001, head.add(facing.turnClockwise()), facing.turnClockwise(), [...route, head])
+      new Path(
+        score + 1001,
+        head.add(facing.turnClockwise()),
+        facing.turnClockwise(),
+        [...route, head]
+      )
     ]) {
       // If we're not
       if (head.getGridValue(grid) == '#') {
@@ -96,8 +103,7 @@ initialize(__filename, async (part, input) => {
     end.hash(),
     ...winningPaths
       .flat()
-      .map((x) => x.route)
-      .flat()
+      .flatMap((x) => x.route)
       .map((v) => v.hash())
   ].distinct().length;
 })

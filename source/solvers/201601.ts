@@ -9,12 +9,21 @@ initialize(__filename, async (part, input) => {
       // Parse R123, L7 etc into ['R', 123] tuples
       .join('')
       .split(', ')
-      .map((row) => [row.substring(0, 1), parseInt(row.substring(1))] as ['L' | 'R', number])
+      .map(
+        (row) =>
+          [row.substring(0, 1), parseInt(row.substring(1))] as [
+            'L' | 'R',
+            number
+          ]
+      )
       // Using abortable to cheekily have an early return on reduce
       .abortableReduce(
         ({ facing, position }, [turn, distance]) => {
           // Turn
-          facing = turn == 'R' ? facing.turnClockwise() : facing.turnCounterClockwise();
+          facing =
+            turn == 'R'
+              ? facing.turnClockwise()
+              : facing.turnCounterClockwise();
 
           // Stepping 1 by 1 over distance
           for (let i = 0; i < distance; i++) {

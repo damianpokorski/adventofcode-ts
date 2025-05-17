@@ -1,5 +1,5 @@
 import '../utils';
-import { initialize, Options } from '../utils/registry';
+import { type Options, initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input, opts: Options) => {
   const [rawRegisters, rawProgram] = input
@@ -76,7 +76,10 @@ initialize(__filename, async (part, input, opts: Options) => {
     } as Record<number, (v: bigint) => void>;
 
     // Operate
-    while (program[instructionPointer] !== undefined && program[instructionPointer + 1] !== undefined) {
+    while (
+      program[instructionPointer] !== undefined &&
+      program[instructionPointer + 1] !== undefined
+    ) {
       const instruction = program[instructionPointer];
       const operand = program[instructionPointer + 1];
       if (opts.verbose) {
@@ -102,7 +105,12 @@ initialize(__filename, async (part, input, opts: Options) => {
   };
 
   if (part == 1) {
-    return execute(rawRegisters[0], rawRegisters[1], rawRegisters[2], rawProgram).join(',');
+    return execute(
+      rawRegisters[0],
+      rawRegisters[1],
+      rawRegisters[2],
+      rawProgram
+    ).join(',');
   }
 
   // Thanks to observations from
@@ -116,7 +124,12 @@ initialize(__filename, async (part, input, opts: Options) => {
     if (i < 0) return nextVal;
     for (let aVal = nextVal << 3n; aVal < (nextVal << 3n) + 8n; aVal++) {
       rawRegisters[0] = aVal;
-      const out = execute(rawRegisters[0], rawRegisters[1], rawRegisters[2], rawProgram);
+      const out = execute(
+        rawRegisters[0],
+        rawRegisters[1],
+        rawRegisters[2],
+        rawProgram
+      );
       if (out[0] === rawProgram[i]) {
         const finalVal = findInitialA(aVal, i - 1);
         if (finalVal >= 0) return finalVal;

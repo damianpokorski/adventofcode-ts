@@ -8,7 +8,11 @@ initialize(__filename, async (part, input) => {
     .map((chunk) =>
       chunk
         .split('\n')
-        .map((line) => line.split(line.includes(',') ? ',' : '|').map((value) => parseInt(value)))
+        .map((line) =>
+          line
+            .split(line.includes(',') ? ',' : '|')
+            .map((value) => parseInt(value))
+        )
     ) as unknown as [[number, number][], number[][]]; // Force casting cause we know what's there :)
 
   // Build hashmaps for faster look ups
@@ -32,10 +36,10 @@ initialize(__filename, async (part, input) => {
     if (l == r) {
       return 0;
     }
-    if ((befores[l] && befores[l].includes(r)) || (afters[r] && afters[r].includes(l))) {
+    if (befores[l]?.includes(r) || afters[r]?.includes(l)) {
       return -1;
     }
-    if ((befores[r] && befores[r].includes(l)) || (afters[l] && afters[l].includes(r))) {
+    if (befores[r]?.includes(l) || afters[l]?.includes(r)) {
       return 1;
     }
     return 0;

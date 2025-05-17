@@ -20,8 +20,9 @@ initialize(__filename, async (part, input) => {
       // Expand
       const expands = set
         // -> Filter to adjecent matching values & flatten
-        .map((cell) => cell.adjecents().filter((adjecent) => getter(adjecent) == value))
-        .flat()
+        .flatMap((cell) =>
+          cell.adjecents().filter((adjecent) => getter(adjecent) == value)
+        )
         .distinct((v) => v.hash())
         // -> Ignore ones already in our set
         .filter((cell) => !set.find((knownCell) => knownCell.equals(cell)));
@@ -50,15 +51,18 @@ initialize(__filename, async (part, input) => {
 
       const area = section.length;
       // Cheekily figure out the perimeter cells by expanding each cell by 1, and then excluding all existing fields
-      const fencePositions = section
-        .map((cell) =>
-          cell
-            .adjecents()
-            .filter((adjecent) => section.find((other) => other.equals(adjecent)) == undefined)
-            .distinct()
-            .map((fence) => [fence, cell.toFacing(fence)] as [Vector, VectorFacing])
-        )
-        .flat();
+      const fencePositions = section.flatMap((cell) =>
+        cell
+          .adjecents()
+          .filter(
+            (adjecent) =>
+              section.find((other) => other.equals(adjecent)) == undefined
+          )
+          .distinct()
+          .map(
+            (fence) => [fence, cell.toFacing(fence)] as [Vector, VectorFacing]
+          )
+      );
 
       const perimeter = fencePositions.length;
       let sides = 0;
@@ -68,10 +72,14 @@ initialize(__filename, async (part, input) => {
       // fencePositions.sort((a,b) => a)
       if (part == 2) {
         const horizontals = fencePositions
-          .filter(([_, facing]) => [VectorFacing.U, VectorFacing.D].includes(facing))
+          .filter(([_, facing]) =>
+            [VectorFacing.U, VectorFacing.D].includes(facing)
+          )
           .groupBy((x) => x[1] + x[0].y.toString());
         const verticals = fencePositions
-          .filter(([_, facing]) => [VectorFacing.L, VectorFacing.R].includes(facing))
+          .filter(([_, facing]) =>
+            [VectorFacing.L, VectorFacing.R].includes(facing)
+          )
           .groupBy((x) => x[1] + x[0].x.toString());
 
         for (const line of [

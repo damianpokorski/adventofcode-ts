@@ -6,14 +6,17 @@ initialize(__filename, async (part, input) => {
 
   const data = input
     .map((line) => line.split('['))
-    .map(([left, right]) => [left.split('-'), right.slice(0, right.length - 1).split('')])
+    .map(([left, right]) => [
+      left.split('-'),
+      right.slice(0, right.length - 1).split('')
+    ])
     .map(
       ([left, right]) =>
-        [left.slice(0, left.length - 1), parseInt(left[left.length - 1]), right] as [
-          string[],
-          number,
-          string[]
-        ]
+        [
+          left.slice(0, left.length - 1),
+          parseInt(left[left.length - 1]),
+          right
+        ] as [string[], number, string[]]
     );
 
   if (part == 2) {
@@ -24,7 +27,10 @@ initialize(__filename, async (part, input) => {
             .map((word) =>
               word
                 .split('')
-                .map((letter) => alphabet[(alphabet.indexOf(letter) + id) % alphabet.length])
+                .map(
+                  (letter) =>
+                    alphabet[(alphabet.indexOf(letter) + id) % alphabet.length]
+                )
                 .join('')
             )
             .join(' ')
@@ -47,11 +53,11 @@ initialize(__filename, async (part, input) => {
         )
           .map(
             ([_, entries]) =>
-              [entries[1].length, entries.flat()[0], alphabet.indexOf(entries.flat()[0])] as [
-                number,
-                string,
-                number
-              ]
+              [
+                entries[1].length,
+                entries.flat()[0],
+                alphabet.indexOf(entries.flat()[0])
+              ] as [number, string, number]
           )
           .sort(([countA, a, priorityA], [countB, b, priorityB]) =>
             countA == countB ? priorityA - priorityB : countB - countA

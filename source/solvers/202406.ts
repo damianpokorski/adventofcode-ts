@@ -23,7 +23,12 @@ initialize(__filename, async (part, input) => {
     return position.getGridValue(grid) === undefined;
   };
 
-  const walk = (start: Vector, facing: Vector, withVisitTracking: boolean, withLoopDetection: boolean) => {
+  const walk = (
+    start: Vector,
+    facing: Vector,
+    withVisitTracking: boolean,
+    withLoopDetection: boolean
+  ) => {
     let current = start.copy();
     let currentFacing = facing.copy();
     let moves = 0;
@@ -42,7 +47,10 @@ initialize(__filename, async (part, input) => {
         // P2 - Detect cycles
         if (withLoopDetection) {
           const fastHash =
-            (current.x << 8) + (current.y << 16) + (currentFacing.x << 24) + (currentFacing.y << 32);
+            (current.x << 8) +
+            (current.y << 16) +
+            (currentFacing.x << 24) +
+            (currentFacing.y << 32);
           if (visitedHashes.has(fastHash)) {
             loopDetected = true;
             break;

@@ -48,11 +48,14 @@ initialize(__filename, async (part, input) => {
   const quads = robots
     .filter(
       // Remov middle sections
-      (robot) => robot.position.x != Math.floor(tiles.x / 2) && robot.position.y != Math.floor(tiles.y / 2)
+      (robot) =>
+        robot.position.x != Math.floor(tiles.x / 2) &&
+        robot.position.y != Math.floor(tiles.y / 2)
     )
     .groupBy(
       // Split into quadrants
-      (robot) => Math.round(robot.position.x / tiles.x) + `/` + Math.round(robot.position.y / tiles.y)
+      (robot) =>
+        `${Math.round(robot.position.x / tiles.x)}/${Math.round(robot.position.y / tiles.y)}`
     );
 
   return Object.values(quads)

@@ -5,7 +5,10 @@ initialize(__filename, async (part, input) => {
   const fuelCalc = (x: number) => Math.floor(x / 3) - 2;
   const recursiveFuelCalc = (x: number): number => {
     const fuelRequired = fuelCalc(x);
-    return Math.max(0, fuelRequired + (fuelRequired > 0 ? recursiveFuelCalc(fuelRequired) : 0));
+    return Math.max(
+      0,
+      fuelRequired + (fuelRequired > 0 ? recursiveFuelCalc(fuelRequired) : 0)
+    );
   };
 
   return input

@@ -18,7 +18,10 @@ const getNumberOfStones = memoize(
     if (string.length % 2 == 0) {
       const left = parseInt(string.slice(0, string.length / 2));
       const right = parseInt(string.slice(string.length / 2));
-      return getNumberOfStones([left, blinks - 1]) + getNumberOfStones([right, blinks - 1]);
+      return (
+        getNumberOfStones([left, blinks - 1]) +
+        getNumberOfStones([right, blinks - 1])
+      );
     }
 
     // * 2024 anything else

@@ -7,8 +7,12 @@ initialize(__filename, async (part, input) => {
       (line) =>
         line
           .split(',')
-          .map((elf) => elf.split('-').fromStringToNumberArray())
-          .flat() as [number, number, number, number]
+          .flatMap((elf) => elf.split('-').fromStringToNumberArray()) as [
+          number,
+          number,
+          number,
+          number
+        ]
     )
     .filter(([a, b, c, d]) => {
       // Part 1: Check if any shifts are entirely overlapped by one another

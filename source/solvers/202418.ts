@@ -17,7 +17,11 @@ initialize(__filename, async (part, input) => {
 
   const distance = (corruptions: number) => {
     // Create grid
-    const grid = Grid.createAndFill(gridSize + 1, gridSize + 1, () => true as boolean);
+    const grid = Grid.createAndFill(
+      gridSize + 1,
+      gridSize + 1,
+      () => true as boolean
+    );
     const gridRaw = grid.array;
 
     for (const { x, y } of walls.slice(0, corruptions)) {
@@ -43,7 +47,12 @@ initialize(__filename, async (part, input) => {
 
       for (const next of path.head.adjecents()) {
         // Stay in bounds
-        if (next.x < 0 || next.y < 0 || next.x > gridSize || next.y > gridSize) {
+        if (
+          next.x < 0 ||
+          next.y < 0 ||
+          next.x > gridSize ||
+          next.y > gridSize
+        ) {
           continue;
         }
         // False - means valid path, true # wall

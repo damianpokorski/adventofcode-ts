@@ -14,7 +14,10 @@ declare global {
      * @param predicate a function used to evalute substring
      * @param direction ltr - left to right, rtl - right to left, default to ltr if not provided
      */
-    substringFind(predicate: (value: string) => boolean, direction?: 'ltr' | 'rtl'): string | undefined;
+    substringFind(
+      predicate: (value: string) => boolean,
+      direction?: 'ltr' | 'rtl'
+    ): string | undefined;
 
     /**
      * Very unlikely I'll need to reuse this - but just in case
@@ -45,7 +48,10 @@ if (!String.prototype.massReplace) {
 if (!String.prototype.substringFind) {
   String.prototype.substringFind = function (predicate, direction = 'ltr') {
     for (let i = 0; i < this.length; i++) {
-      const substr = direction == 'ltr' ? this.substring(0, i + 1) : this.substring(this.length - i - 1);
+      const substr =
+        direction == 'ltr'
+          ? this.substring(0, i + 1)
+          : this.substring(this.length - i - 1);
 
       if (predicate(substr)) {
         return substr;

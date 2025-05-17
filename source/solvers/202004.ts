@@ -33,7 +33,10 @@ initialize(__filename, async (part, input) => {
         )
     )
     .filter((passport) => {
-      if (requiredFields.every((required) => passport[required] !== undefined) == false) {
+      if (
+        requiredFields.every((required) => passport[required] !== undefined) ==
+        false
+      ) {
         return false;
       }
       if (part == 1) {
@@ -42,34 +45,37 @@ initialize(__filename, async (part, input) => {
 
       // Years
       if (
-        inRange(passport['byr'], 1920, 2002) == false ||
-        inRange(passport['iyr'], 2010, 2020) == false ||
-        inRange(passport['eyr'], 2020, 2030) == false
+        inRange(passport.byr, 1920, 2002) == false ||
+        inRange(passport.iyr, 2010, 2020) == false ||
+        inRange(passport.eyr, 2020, 2030) == false
       ) {
         return false;
       }
       // Height, defined & in cm or in
       if (
-        passport['hgt'] == undefined ||
-        (passport['hgt'].endsWith('cm') == false && passport['hgt'].endsWith('in') == false) ||
-        (passport['hgt'].endsWith('cm') && inRange(passport['hgt'].replace('cm', ''), 150, 193) == false) ||
-        (passport['hgt'].endsWith('in') && inRange(passport['hgt'].replace('in', ''), 59, 76) == false)
+        passport.hgt == undefined ||
+        (passport.hgt.endsWith('cm') == false &&
+          passport.hgt.endsWith('in') == false) ||
+        (passport.hgt.endsWith('cm') &&
+          inRange(passport.hgt.replace('cm', ''), 150, 193) == false) ||
+        (passport.hgt.endsWith('in') &&
+          inRange(passport.hgt.replace('in', ''), 59, 76) == false)
       ) {
         return false;
       }
 
       // hair colour
-      if (hairColourRegex.test(passport['hcl'] ?? '') == false) {
+      if (hairColourRegex.test(passport.hcl ?? '') == false) {
         return false;
       }
 
       // eye colour
-      if (validEyeColours.includes(passport['ecl']) == false) {
+      if (validEyeColours.includes(passport.ecl) == false) {
         return false;
       }
 
       // PID
-      if (pidRegex.test(passport['pid'] ?? '') == false) {
+      if (pidRegex.test(passport.pid ?? '') == false) {
         return false;
       }
       return true;

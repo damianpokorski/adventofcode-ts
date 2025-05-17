@@ -2,7 +2,8 @@ import '../utils';
 import { Vector } from '../utils';
 import { initialize } from '../utils/registry';
 
-const delay = (ms: number) => new Promise((resolve, reject) => setTimeout(() => resolve(undefined), ms));
+const delay = (ms: number) =>
+  new Promise((resolve, reject) => setTimeout(() => resolve(undefined), ms));
 
 initialize(__filename, async (part, input, opts) => {
   const [inputGrid, inputMoves] = input.join('\n').split('\n\n');
@@ -29,9 +30,9 @@ initialize(__filename, async (part, input, opts) => {
 
   const moves = inputMoves.split('').map((move) => Vector.fromChar(move));
 
-  const vectors = grid
-    .map((row, y) => row.map((cell, x) => [cell, new Vector(x, y)] as [string, Vector]))
-    .flat();
+  const vectors = grid.flatMap((row, y) =>
+    row.map((cell, x) => [cell, new Vector(x, y)] as [string, Vector])
+  );
 
   const swap = (x1: number, y1: number, x2: number, y2: number) => {
     const one = grid[y1][x1];
@@ -68,7 +69,11 @@ initialize(__filename, async (part, input, opts) => {
     }
 
     // Facing a box - push it
-    if (moveTargetType == 'O' || moveTargetType == '[' || moveTargetType == ']') {
+    if (
+      moveTargetType == 'O' ||
+      moveTargetType == '[' ||
+      moveTargetType == ']'
+    ) {
       let isMoveable = false;
       const verticalShifts = [] as Vector[][];
       // Continue checking in that direction until we find a blank spot our are out of bounds
@@ -81,17 +86,23 @@ initialize(__filename, async (part, input, opts) => {
             // Part 2 vertical shifts
             // Grab current box & make it an array
             verticalShifts.push(
-              [moveTarget, moveTarget.add(new Vector(moveTargetType == '[' ? 1 : -1, 0))].sort(
-                (a, b) => a.x - b.x
-              )
+              [
+                moveTarget,
+                moveTarget.add(new Vector(moveTargetType == '[' ? 1 : -1, 0))
+              ].sort((a, b) => a.x - b.x)
             );
             while (true) {
               // Keep moving all of the boxes
-              const nextSet = verticalShifts[verticalShifts.length - 1].map((boxes) => boxes.add(move));
+              const nextSet = verticalShifts[verticalShifts.length - 1].map(
+                (boxes) => boxes.add(move)
+              );
               // const nextSetBoxes = nextSet.filter((x) => ['[', ']'].includes(x.getGridValue(grid) ?? ''));
               const nextSetBoxes = [...nextSet];
               // Trim blank spaces around edges - wee don't want to push those, but bits inbetween -yeah
-              while (nextSetBoxes.length > 0 && nextSetBoxes[0].getGridValue(grid) == '.') {
+              while (
+                nextSetBoxes.length > 0 &&
+                nextSetBoxes[0].getGridValue(grid) == '.'
+              ) {
                 nextSetBoxes.shift();
               }
               while (
@@ -105,8 +116,13 @@ initialize(__filename, async (part, input, opts) => {
                 if (nextSetBoxes[0].getGridValue(grid) == ']') {
                   nextSetBoxes.unshift(nextSetBoxes[0].add(new Vector(-1, 0)));
                 }
-                if (nextSetBoxes[nextSetBoxes.length - 1].getGridValue(grid) == '[') {
-                  nextSetBoxes.push(nextSetBoxes[nextSetBoxes.length - 1].add(new Vector(1, 0)));
+                if (
+                  nextSetBoxes[nextSetBoxes.length - 1].getGridValue(grid) ==
+                  '['
+                ) {
+                  nextSetBoxes.push(
+                    nextSetBoxes[nextSetBoxes.length - 1].add(new Vector(1, 0))
+                  );
                 }
               }
               // If the next row is full of blanks, we can move!
@@ -135,7 +151,12 @@ initialize(__filename, async (part, input, opts) => {
           // Part 2 - Horizontal moving - if the move was horizontal, we gotta fix some ][ to [] by swapping them back to correct spots
           if (move.isHorizontal()) {
             while (Math.abs(nextTarget.x - moveTarget.x) !== 1) {
-              swap(nextTarget.x, nextTarget.y, nextTarget.x - move.x, nextTarget.y);
+              swap(
+                nextTarget.x,
+                nextTarget.y,
+                nextTarget.x - move.x,
+                nextTarget.y
+              );
               // Swap values one by one
               nextTarget.x -= move.x;
             } // Swap the blank spot with the box
@@ -208,7 +229,9 @@ vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
 >^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
 <><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
 ^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
-v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^`.split('\n'),
+v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^`.split(
+      '\n'
+    ),
     10092
   )
   .test(
@@ -233,6 +256,8 @@ vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
 >^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
 <><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
 ^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
-v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^`.split('\n'),
+v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^`.split(
+      '\n'
+    ),
     9021
   );

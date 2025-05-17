@@ -1,5 +1,5 @@
 import '../utils';
-import { allPaths, Grid, memoize, Vector } from '../utils';
+import { Grid, type Vector, allPaths, memoize } from '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input, opts) => {
@@ -25,7 +25,9 @@ initialize(__filename, async (part, input, opts) => {
 
   // Precompute best paths i.e. 0 - 9 has multiple paths, return only ones that has the same size
   const precomputeGrid = (grid: Grid<string>) => {
-    const lookup = new Map(grid.asVectors().map(([vector, value]) => [value, vector]));
+    const lookup = new Map(
+      grid.asVectors().map(([vector, value]) => [value, vector])
+    );
     const bestRoutes = {} as Record<string, Record<string, string[][]>>;
     for (const a of lookup.keys()) {
       for (const b of lookup.keys()) {
@@ -51,13 +53,16 @@ initialize(__filename, async (part, input, opts) => {
   const arrowsComputed = precomputeGrid(arrows);
 
   // Solving numpad input & getting best possibilities
-  const solveInput = (computed: Record<string, Record<string, string[][]>>, goal: string[]) => {
+  const solveInput = (
+    computed: Record<string, Record<string, string[][]>>,
+    goal: string[]
+  ) => {
     let possibilities = [[]] as string[][];
     // For every character in goal
     for (let i = 0; i < goal.length; i++) {
-      possibilities = computed[i == 0 ? 'A' : goal[i - 1]!][goal[i]]
-        .map((path) => possibilities.map((pos) => [...pos, ...path]))
-        .flat();
+      possibilities = computed[i == 0 ? 'A' : goal[i - 1]!][goal[i]].flatMap(
+        (path) => possibilities.map((pos) => [...pos, ...path])
+      );
     }
     return possibilities;
   };
@@ -90,7 +95,9 @@ initialize(__filename, async (part, input, opts) => {
 
   return input
     .map((row) => {
-      const pass1 = solveInput(numpadComputed, row.split('')).map((p) => p.join(''));
+      const pass1 = solveInput(numpadComputed, row.split('')).map((p) =>
+        p.join('')
+      );
 
       let size = Number.POSITIVE_INFINITY;
       for (const combination of pass1) {

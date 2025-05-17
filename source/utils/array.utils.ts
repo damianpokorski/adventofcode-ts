@@ -1,11 +1,9 @@
 // All of the utils files break conventions :) But it's fun
 
 import { combinations, filter, find, map, permutations } from 'obliterator';
-import { PredicateFunction } from 'obliterator/filter';
-import { MapFunction } from 'obliterator/map';
-import { IntoInterator } from 'obliterator/types';
-
-export {};
+import type { PredicateFunction } from 'obliterator/filter';
+import type { MapFunction } from 'obliterator/map';
+import type { IntoInterator } from 'obliterator/types';
 
 // Array extensions -  a bit naughty but it's just convenient
 declare global {
@@ -31,9 +29,13 @@ declare global {
      * Groups object into a hashmap of arrays
      * @param keyGenerator - generates a key to be used in a dashmap
      */
-    groupBy<U extends string | number>(keyGenerator: (value: T) => U): Record<U, T[]>;
+    groupBy<U extends string | number>(
+      keyGenerator: (value: T) => U
+    ): Record<U, T[]>;
 
-    groupByToEntries<U extends string | number>(keyGenerator: (value: T) => U): [U, T[]][];
+    groupByToEntries<U extends string | number>(
+      keyGenerator: (value: T) => U
+    ): [U, T[]][];
 
     /**
      * Returns array result in form of pairs, i.e. for:
@@ -50,12 +52,20 @@ declare global {
     abortable<U>(fn: (self: T[]) => U): U | undefined;
 
     abortableReduce<U>(
-      callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U,
+      callbackfn: (
+        previousValue: U,
+        currentValue: T,
+        currentIndex: number,
+        array: T[]
+      ) => U,
       initialValue: U
     ): U;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    abortableMap<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[];
+    abortableMap<U>(
+      callbackfn: (value: T, index: number, array: T[]) => U,
+      // biome-ignore lint/suspicious/noExplicitAny: Making TS Happy
+      thisArg?: any
+    ): U[];
 
     // Had enough writing map -> parseInt
     fromStringToNumberArray(): number[];
@@ -139,7 +149,10 @@ if (!Array.prototype.groupByToEntries) {
 }
 if (!Array.prototype.pairwise) {
   Array.prototype.pairwise = function <T>(): [T, T][] {
-    return this.map((_, index) => [this[index - 1], this[index]]).slice(1) as [T, T][];
+    return this.map((_, index) => [this[index - 1], this[index]]).slice(1) as [
+      T,
+      T
+    ][];
   };
 }
 
@@ -150,7 +163,9 @@ export class EarlyReturn<T> extends Error {
 }
 
 if (!Array.prototype.abortable) {
-  Array.prototype.abortable = function <T, U>(fn: (self: T[]) => U): U | undefined {
+  Array.prototype.abortable = function <T, U>(
+    fn: (self: T[]) => U
+  ): U | undefined {
     try {
       // Run inner call
       return fn(this);
@@ -167,7 +182,12 @@ if (!Array.prototype.abortable) {
 
 if (!Array.prototype.abortableReduce) {
   Array.prototype.abortableReduce = function <T, U>(
-    callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U,
+    callbackfn: (
+      previousValue: U,
+      currentValue: T,
+      currentIndex: number,
+      array: T[]
+    ) => U,
     initialValue: U
   ): U {
     return this.abortable((self) => {

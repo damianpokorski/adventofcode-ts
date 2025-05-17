@@ -21,7 +21,13 @@ initialize(__filename, async (part, input) => {
   return (
     part == 1
       ? [new Vector(3, 1)]
-      : [new Vector(1, 1), new Vector(3, 1), new Vector(5, 1), new Vector(7, 1), new Vector(1, 2)]
+      : [
+          new Vector(1, 1),
+          new Vector(3, 1),
+          new Vector(5, 1),
+          new Vector(7, 1),
+          new Vector(1, 2)
+        ]
   )
     .map((step) => treesOnPath(step))
     .reduce((a, b) => a * b, 1);

@@ -14,7 +14,9 @@ initialize(__filename, async (part, input, opts) => {
         .map((row) =>
           row
             .split(' ')
-            .map((cell, i, rowArray) => (rowArray.length == 2 && i == 1 ? parseInt(cell) == 1 : cell))
+            .map((cell, i, rowArray) =>
+              rowArray.length == 2 && i == 1 ? parseInt(cell) == 1 : cell
+            )
         )
     ) as [[string, boolean][], GateTuple[]];
 
@@ -40,7 +42,10 @@ initialize(__filename, async (part, input, opts) => {
             state.set(result, state.get(a)! || state.get(b)!);
           }
           if (op == 'XOR') {
-            state.set(result, Boolean(state.get(a)!) !== Boolean(state.get(b))!);
+            state.set(
+              result,
+              Boolean(state.get(a)!) !== Boolean(state.get(b))!
+            );
           }
         }
       }

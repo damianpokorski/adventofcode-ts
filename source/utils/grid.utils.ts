@@ -11,7 +11,7 @@ export class Grid<T extends object | string | number | boolean> {
       for (let x = 0; x < this.array[y].length; x++) {
         row += mapper ? mapper(this.array[y][x]) : this.array[y][x].toString();
       }
-      rows += row + '\n';
+      rows += `${row}\n`;
     }
     return rows;
   }
@@ -51,7 +51,9 @@ export class Grid<T extends object | string | number | boolean> {
   ) {
     return new Grid<T>(
       [...new Array(y)].map((yIndex) =>
-        [...new Array(x)].map((xIndex) => valueFactory(new Vector(xIndex, yIndex)))
+        [...new Array(x)].map((xIndex) =>
+          valueFactory(new Vector(xIndex, yIndex))
+        )
       )
     );
   }
@@ -61,6 +63,10 @@ export class Grid<T extends object | string | number | boolean> {
   }
 
   transpose() {
-    return new Grid(this.array[0].map((col, c) => this.array.map((row, r) => this.array[r][c])));
+    return new Grid(
+      this.array[0].map((col, c) =>
+        this.array.map((row, r) => this.array[r][c])
+      )
+    );
   }
 }

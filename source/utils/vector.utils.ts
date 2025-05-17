@@ -32,7 +32,8 @@ export class Vector {
     const thisRepeats =
       (target.x * secondVector.y - target.y * secondVector.x) /
       (this.x * secondVector.y - this.y * secondVector.x);
-    const secondVectorRepeats = (target.x - this.x * thisRepeats) / secondVector.x;
+    const secondVectorRepeats =
+      (target.x - this.x * thisRepeats) / secondVector.x;
     return [thisRepeats, secondVectorRepeats];
   }
 
@@ -101,7 +102,12 @@ export class Vector {
   }
 
   adjecents() {
-    return [this.add(Vector.Up), this.add(Vector.Right), this.add(Vector.Down), this.add(Vector.Left)];
+    return [
+      this.add(Vector.Up),
+      this.add(Vector.Right),
+      this.add(Vector.Down),
+      this.add(Vector.Left)
+    ];
   }
   omnidirectionalAdjecents() {
     return [

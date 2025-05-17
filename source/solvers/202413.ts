@@ -17,13 +17,23 @@ initialize(__filename, async (part, input) => {
           ?.split('Y')
           .map((x) => parseInt(x))
       ) as [[number, number], [number, number], [number, number]];
-      const [a, b, prize] = [new Vector(x1, y1), new Vector(x2, y2), new Vector(x3, y3)];
+      const [a, b, prize] = [
+        new Vector(x1, y1),
+        new Vector(x2, y2),
+        new Vector(x3, y3)
+      ];
 
       if (part == 1) {
         const minAs = prize.divide(a).floor();
         const minBs = prize.divide(b).floor();
-        const minOps = Math.max(Math.min(minAs.x, minAs.y, minBs.x, minBs.y), 1);
-        const maxOps = Math.min(Math.max(minAs.x, minAs.y, minBs.x, minBs.y), 100);
+        const minOps = Math.max(
+          Math.min(minAs.x, minAs.y, minBs.x, minBs.y),
+          1
+        );
+        const maxOps = Math.min(
+          Math.max(minAs.x, minAs.y, minBs.x, minBs.y),
+          100
+        );
 
         const combinations: [number, number][] = [];
 
@@ -56,7 +66,8 @@ initialize(__filename, async (part, input) => {
       prize.y += 10000000000000;
       // Using algebra - finding out the intersection of two lines
       // Might need to rebrush up on the topic, https://www.youtube.com/watch?v=-5J-DAsWuJc has a great disassemly of the issues
-      const aPresses = (prize.x * b.y - prize.y * b.x) / (a.x * b.y - a.y * b.x);
+      const aPresses =
+        (prize.x * b.y - prize.y * b.x) / (a.x * b.y - a.y * b.x);
       const bPresses = (prize.x - a.x * aPresses) / b.x;
       // Just in case this comes back against next year, offloaded it into a helper fn :|
       //const [aPresses, bPresses] = a.findIntersectionFrequency(b, prize);

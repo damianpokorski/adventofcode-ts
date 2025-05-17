@@ -8,11 +8,11 @@ initialize(__filename, async (part, input) => {
     Object.fromEntries(
       line
         .split(',')
-        .map(([direction, ...distance]) =>
-          [...new Array(parseInt(distance.join('')))].map(() => Vector.fromUDLR(direction))
+        .flatMap(([direction, ...distance]) =>
+          [...new Array(parseInt(distance.join('')))].map(() =>
+            Vector.fromUDLR(direction)
+          )
         )
-        // Convert array of steps to array of visited stops
-        .flat()
         // Incrementally build paths & track length of steps for each position
         .reduce(
           (steps: [Vector, number][], next: Vector) => {
@@ -43,7 +43,11 @@ initialize(__filename, async (part, input) => {
   return (
     overlaps
       // Part 1 - distance of overlap from the center, part 2 combined length of wires contributing to overlap
-      .map((hash) => (part == 1 ? pathA[hash].distanceFromCenter : pathA[hash].steps + pathB[hash].steps))
+      .map((hash) =>
+        part == 1
+          ? pathA[hash].distanceFromCenter
+          : pathA[hash].steps + pathB[hash].steps
+      )
       .sort((a, b) => a - b)
       .shift()
   );

@@ -2,7 +2,9 @@ import '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
-  const data = input.map((line) => line.split('').map((value) => parseInt(value)));
+  const data = input.map((line) =>
+    line.split('').map((value) => parseInt(value))
+  );
 
   // Calculate most common bit for each column
   const getGamma = (rowsOfBinaryValues: number[][]) =>
@@ -15,17 +17,27 @@ initialize(__filename, async (part, input) => {
           ),
         data[0].map((x) => 0)
       )
-      .map((sumOfBinaryValues) => (sumOfBinaryValues >= rowsOfBinaryValues.length / 2 ? 1 : 0));
+      .map((sumOfBinaryValues) =>
+        sumOfBinaryValues >= rowsOfBinaryValues.length / 2 ? 1 : 0
+      );
 
   const getEpsilon = (rowsOfBinaryValues: number[][]) =>
-    getGamma(rowsOfBinaryValues).map((binaryValue) => (binaryValue == 1 ? 0 : 1));
+    getGamma(rowsOfBinaryValues).map((binaryValue) =>
+      binaryValue == 1 ? 0 : 1
+    );
 
   const binaryArrayToDecimal = (rowsOfBinaryValues: number[]) =>
-    parseInt(rowsOfBinaryValues.map((binaryValue) => binaryValue.toString()).join(''), 2);
+    parseInt(
+      rowsOfBinaryValues.map((binaryValue) => binaryValue.toString()).join(''),
+      2
+    );
 
   // Part 1: Solution
   if (part == 1) {
-    return binaryArrayToDecimal(getGamma(data)) * binaryArrayToDecimal(getEpsilon(data));
+    return (
+      binaryArrayToDecimal(getGamma(data)) *
+      binaryArrayToDecimal(getEpsilon(data))
+    );
   }
 
   // Part 2
@@ -41,7 +53,10 @@ initialize(__filename, async (part, input) => {
 
     while (dataMatchingCriteria.length !== 1) {
       dataMatchingCriteria = dataMatchingCriteria.filter((binaryValues) =>
-        criteria.every((criteriaValue, criteriaIndex) => binaryValues[criteriaIndex] == criteriaValue)
+        criteria.every(
+          (criteriaValue, criteriaIndex) =>
+            binaryValues[criteriaIndex] == criteriaValue
+        )
       );
 
       // Calculate next gamma character

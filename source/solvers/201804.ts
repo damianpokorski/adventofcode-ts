@@ -30,7 +30,8 @@ initialize(__filename, async (part, input) => {
       // Extend only with events that are relevant to the shift
       events: events.filter(
         (event) =>
-          event.timestamp > shift.dateStart && (shift.dateEnd == null || event.timestamp < shift.dateEnd)
+          event.timestamp > shift.dateStart &&
+          (shift.dateEnd == null || event.timestamp < shift.dateEnd)
       )
     }))
     .map((shift) => ({
@@ -62,16 +63,25 @@ initialize(__filename, async (part, input) => {
   if (part == 1) {
     // Find our go to guy
     const mostAsleepGuard = shiftsByGuards
-      .sort((a, b) => b[1].map((aShift) => aShift.asleep).sum() - a[1].map((bShift) => bShift.asleep).sum())
+      .sort(
+        (a, b) =>
+          b[1].map((aShift) => aShift.asleep).sum() -
+          a[1].map((bShift) => bShift.asleep).sum()
+      )
       .shift()!;
 
     // Find out when is he most likely to be asleep
     const [mostCommonMinute, _, id] = mostAsleepGuard![1]
-      .map((shift) =>
-        shift.timeline.filter(([minute, awake]) => awake == false).map(([minute]) => [shift.id, minute])
+      .flatMap((shift) =>
+        shift.timeline
+          .filter(([minute, awake]) => awake == false)
+          .map(([minute]) => [shift.id, minute])
       )
-      .flat()
-      .map(([id, minute], _, others) => [minute, others.filter((other) => other[1] == minute).length, id])
+      .map(([id, minute], _, others) => [
+        minute,
+        others.filter((other) => other[1] == minute).length,
+        id
+      ])
       .sort(([_, a], [__, b]) => b - a)
       .shift()!;
 
@@ -83,10 +93,16 @@ initialize(__filename, async (part, input) => {
       return [
         ...([
           ...(shifts
-            .map((shift) => shift.timeline.filter((x) => x[1] == false).map(([minute, _]) => minute))
-            .flat()
+            .flatMap((shift) =>
+              shift.timeline
+                .filter((x) => x[1] == false)
+                .map(([minute, _]) => minute)
+            )
             .groupByToEntries((minute) => minute)
-            .map(([minute, matches]) => [matches.length, parseInt(minute.toString())])
+            .map(([minute, matches]) => [
+              matches.length,
+              parseInt(minute.toString())
+            ])
             .sort(([a], [b]) => b - a) ?? [0, 0])
         ].shift() ?? [0, 0]),
         parseInt(id)

@@ -3,7 +3,7 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   const table = input.map((row) => row.split(''));
-  const cell = (y: number, x: number) => (table[y] && table[y][x] ? table[y][x] : '');
+  const cell = (y: number, x: number) => (table[y]?.[x] ? table[y][x] : '');
 
   // Part 1
   const slices = [] as string[];
@@ -12,11 +12,27 @@ initialize(__filename, async (part, input) => {
       // Horizontals
       slices.push(table[y].slice(x, x + 4).join(''));
       // Verticals
-      slices.push([cell(y, x), cell(y + 1, x), cell(y + 2, x), cell(y + 3, x)].join(''));
+      slices.push(
+        [cell(y, x), cell(y + 1, x), cell(y + 2, x), cell(y + 3, x)].join('')
+      );
       // LR Diagonals
-      slices.push([cell(y, x), cell(y + 1, x + 1), cell(y + 2, x + 2), cell(y + 3, x + 3)].join(''));
+      slices.push(
+        [
+          cell(y, x),
+          cell(y + 1, x + 1),
+          cell(y + 2, x + 2),
+          cell(y + 3, x + 3)
+        ].join('')
+      );
       // RL Diagonals
-      slices.push([cell(y, x), cell(y + 1, x - 1), cell(y + 2, x - 2), cell(y + 3, x - 3)].join(''));
+      slices.push(
+        [
+          cell(y, x),
+          cell(y + 1, x - 1),
+          cell(y + 2, x - 2),
+          cell(y + 3, x - 3)
+        ].join('')
+      );
     }
   }
   if (part == 1) {

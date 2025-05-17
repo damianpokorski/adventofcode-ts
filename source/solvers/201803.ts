@@ -4,7 +4,9 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   const parsedInput = input
-    .map((line) => line.replaceAll(/[#@:]/g, '').replaceAll(/\s+/g, ' ').split(' '))
+    .map((line) =>
+      line.replaceAll(/[#@:]/g, '').replaceAll(/\s+/g, ' ').split(' ')
+    )
     .map(([id, xy, wh]) => {
       const [x, y] = xy.split(',').fromStringToNumberArray();
       const [w, h] = wh.split('x').fromStringToNumberArray();
@@ -28,12 +30,15 @@ initialize(__filename, async (part, input) => {
 
   // Filter out - only squares that are references multiple times
   if (part == 1) {
-    return grid.asVectors().filter(([_, ids]) => ids !== null && ids.length > 1).length;
+    return grid.asVectors().filter(([_, ids]) => ids !== null && ids.length > 1)
+      .length;
   }
 
   // Start with all entries & remove ids if they're part of overlapping cell
   const set = new Set(parsedInput.map((x) => x.id));
-  for (const [_, ids] of grid.asVectors().filter(([_, ids]) => ids.length > 1)) {
+  for (const [_, ids] of grid
+    .asVectors()
+    .filter(([_, ids]) => ids.length > 1)) {
     for (const id of ids) {
       set.delete(id);
     }

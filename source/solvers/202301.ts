@@ -3,12 +3,17 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   // Swap words to digits depending on part
-  const parse = (input: string) => (part == 1 ? input : input.swapSpelledOutDigitsToNumbers());
+  const parse = (input: string) =>
+    part == 1 ? input : input.swapSpelledOutDigitsToNumbers();
 
   return input
     .map((line) => {
-      const first = parse(line.substringFind((x) => parse(x).hasNumber()) ?? '').extractNumbers();
-      const last = parse(line.substringFind((x) => parse(x).hasNumber(), 'rtl') ?? '').extractNumbers();
+      const first = parse(
+        line.substringFind((x) => parse(x).hasNumber()) ?? ''
+      ).extractNumbers();
+      const last = parse(
+        line.substringFind((x) => parse(x).hasNumber(), 'rtl') ?? ''
+      ).extractNumbers();
       return parseInt(`${first ?? last}${last ?? first}`);
     })
     .sum();

@@ -3,10 +3,20 @@ import { Grid } from '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
-  const [drawsRaw, ...boardsRaw] = input.join('\n').replace(/ +/g, ' ').split('\n\n');
+  const [drawsRaw, ...boardsRaw] = input
+    .join('\n')
+    .replace(/ +/g, ' ')
+    .split('\n\n');
   const draws = drawsRaw.split(',').fromStringToNumberArray();
   const boards = boardsRaw
-    .map((b) => new Grid(b.split('\n').map((line) => line.trim().split(' ').fromStringToNumberArray())))
+    .map(
+      (b) =>
+        new Grid(
+          b
+            .split('\n')
+            .map((line) => line.trim().split(' ').fromStringToNumberArray())
+        )
+    )
     .map((grid, id) => ({
       id,
       grid,
@@ -27,21 +37,27 @@ initialize(__filename, async (part, input) => {
       }
       if (board.unchecked.includes(draw)) {
         // Find the cell location and blank it
-        board.grid.asVectors().forEach(([v, cell]) => {
+        for (const [v, cell] of board.grid.asVectors()) {
           if (draw == cell) {
             board.grid.array[v.y][v.x] = -1;
           }
-        });
+        }
 
         // Check for bingo
         if (
           // Rows
           board.grid.array.some((row) => row.every((cell) => cell == -1)) ||
           // Columns
-          board.grid.transpose().array.some((row) => row.every((cell) => cell == -1)) ||
+          board.grid
+            .transpose()
+            .array.some((row) => row.every((cell) => cell == -1)) ||
           // Diagonals
-          [0, 1, 2, 3, 4].map((x) => board.grid.array[x][x]).every((cell) => cell == -1) ||
-          [0, 1, 2, 3, 4].map((x) => board.grid.transpose().array[x][x]).every((cell) => cell == -1)
+          [0, 1, 2, 3, 4]
+            .map((x) => board.grid.array[x][x])
+            .every((cell) => cell == -1) ||
+          [0, 1, 2, 3, 4]
+            .map((x) => board.grid.transpose().array[x][x])
+            .every((cell) => cell == -1)
         ) {
           board.isCompleted = true;
           board.score =

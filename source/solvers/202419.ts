@@ -11,7 +11,7 @@ initialize(__filename, async (part, input) => {
 
   // Count possibilities
   const possible = memoize(
-    function (target: string) {
+    (target: string) => {
       if (target == '') return 1;
       let count = 0;
       for (const towel of towels) {
@@ -30,7 +30,9 @@ initialize(__filename, async (part, input) => {
 
   return goals
     .map((goal) => possible(goal))
-    .map((possibilities) => (part == 1 ? (possibilities > 0 ? 1 : 0) : possibilities))
+    .map((possibilities) =>
+      part == 1 ? (possibilities > 0 ? 1 : 0) : possibilities
+    )
     .sum();
 })
   .test(

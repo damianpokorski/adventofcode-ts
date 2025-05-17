@@ -3,7 +3,9 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   // Parse
-  const changes = input.map((row) => row.replace('+', '')).map((row) => parseInt(row));
+  const changes = input
+    .map((row) => row.replace('+', ''))
+    .map((row) => parseInt(row));
 
   // Current tally
   let frequency = 0;

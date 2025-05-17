@@ -56,7 +56,9 @@ initialize(__filename, async (part, input) => {
   }
 
   while (true) {
-    const lastFileIndex = sectors.findLastIndex((file) => file.isFile && file.shifted == false);
+    const lastFileIndex = sectors.findLastIndex(
+      (file) => file.isFile && file.shifted == false
+    );
 
     // If we moved all of the files - we're done
     if (lastFileIndex == -1) {
@@ -72,7 +74,11 @@ initialize(__filename, async (part, input) => {
     // Go through blank spaces
     for (let blankIndex = 0; blankIndex < sectors.length; blankIndex++) {
       const blank = sectors[blankIndex];
-      if (blank.isFile == false && blank.size >= file.size && blank.index < file.index) {
+      if (
+        blank.isFile == false &&
+        blank.size >= file.size &&
+        blank.index < file.index
+      ) {
         // Shift out current file & insert a blank sector in its spot
         sectors.splice(lastFileIndex, 1, {
           ...file,

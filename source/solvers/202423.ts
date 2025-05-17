@@ -2,12 +2,15 @@ import { combinations } from 'obliterator';
 import '../utils';
 import { initialize } from '../utils/registry';
 
-const pairs = (array: string[]) => array.flatMap((a, i) => array.slice(i + 1).map((b) => [a, b]));
+const pairs = (array: string[]) =>
+  array.flatMap((a, i) => array.slice(i + 1).map((b) => [a, b]));
 
 initialize(__filename, async (part, input) => {
   const network = new Map<string, string[]>();
 
-  for (const [l, r] of input.map((line) => line.split('-') as [string, string])) {
+  for (const [l, r] of input.map(
+    (line) => line.split('-') as [string, string]
+  )) {
     network.set(l, [...(network.get(l) ?? []), r]);
     network.set(r, [...(network.get(r) ?? []), l]);
   }
@@ -41,7 +44,11 @@ initialize(__filename, async (part, input) => {
       for (const perm of combinations(peers, i)) {
         if (perm.length > largest.length) {
           // Check if all of the nodes are interconnected
-          if (pairs([root, ...perm]).every(([a, b]) => network.has(a) && network.get(a)?.includes(b))) {
+          if (
+            pairs([root, ...perm]).every(
+              ([a, b]) => network.has(a) && network.get(a)?.includes(b)
+            )
+          ) {
             largest.length = perm.length;
             largest = [root, ...perm];
           }

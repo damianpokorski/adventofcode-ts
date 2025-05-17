@@ -51,7 +51,9 @@ export const consoleColors = {
 };
 
 let isSilenced = false;
-export const silence = (setting: boolean) => (isSilenced = setting);
+export const silence = (setting: boolean) => {
+  isSilenced = setting;
+};
 
 export const wrapLog = (color: string, ...data: unknown[]) => {
   if (isSilenced) {
@@ -60,7 +62,11 @@ export const wrapLog = (color: string, ...data: unknown[]) => {
   console.log(`${color}%s\x1b[0m`, ...data);
 };
 
-export const debug = (...data: unknown[]) => wrapLog(consoleColors.FgGray('', false), ...data);
-export const info = (...data: unknown[]) => wrapLog(consoleColors.FgWhite('', false), ...data);
-export const warn = (...data: unknown[]) => wrapLog(consoleColors.FgYellow('', false), ...data);
-export const error = (...data: unknown[]) => wrapLog(consoleColors.FgRed('', false), ...data);
+export const debug = (...data: unknown[]) =>
+  wrapLog(consoleColors.FgGray('', false), ...data);
+export const info = (...data: unknown[]) =>
+  wrapLog(consoleColors.FgWhite('', false), ...data);
+export const warn = (...data: unknown[]) =>
+  wrapLog(consoleColors.FgYellow('', false), ...data);
+export const error = (...data: unknown[]) =>
+  wrapLog(consoleColors.FgRed('', false), ...data);

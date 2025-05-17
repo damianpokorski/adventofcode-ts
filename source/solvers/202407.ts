@@ -4,10 +4,10 @@ import { initialize } from '../utils/registry';
 initialize(__filename, async (part, input) => {
   const equations = input
     .map((value) => value.split(': '))
-    .map(([sum, values]) => [parseInt(sum), values.split(' ').map((value) => parseInt(value))]) as [
-    number,
-    number[]
-  ][];
+    .map(([sum, values]) => [
+      parseInt(sum),
+      values.split(' ').map((value) => parseInt(value))
+    ]) as [number, number[]][];
 
   const operators = part == 1 ? [`+`, `*`] : [`+`, `*`, `||`];
 
@@ -31,7 +31,9 @@ initialize(__filename, async (part, input) => {
     }
 
     for (const op of operators) {
-      if (recursive(useOperator(first, other[0], op), other.slice(1), targetSum)) {
+      if (
+        recursive(useOperator(first, other[0], op), other.slice(1), targetSum)
+      ) {
         return true;
       }
     }
