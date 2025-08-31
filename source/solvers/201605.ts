@@ -7,8 +7,8 @@ initialize(__filename, async (part, input, opts) => {
   const buffer = '********'.split('');
 
   // Replace below with `const precomputed: number[] = []` - to recalculate from scratch, takes about @15s bruteforcing - which makes this quite a boring puzzle
-  const usePrecomputed = true;
-  const precomputed: number[] = usePrecomputed
+  const usePrecomputed: boolean = true;
+  const precomputed: number[] = !usePrecomputed
     ? []
     : opts.isTest
       ? part == 1
