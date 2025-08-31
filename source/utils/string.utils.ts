@@ -1,6 +1,8 @@
-// All of the utils files break conventions :) But it's fun
-
-export {};
+export const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+export const vovels = 'aeiou'.split('');
+export const consnants = alphabet.filter(
+  (letter) => vovels.includes(letter) == false
+);
 
 // String extensions
 declare global {
@@ -31,6 +33,9 @@ declare global {
      * Extracts numeric values from string, i.e. -5.19, 3.14, 5, 500, 0.00001 etc.
      */
     extractNumbers(): number[];
+
+    getVovels(): string[];
+    getConsonants(): string[];
   }
 }
 
@@ -93,5 +98,17 @@ if (!String.prototype.extractNumbers) {
     return [...match].map((value) => {
       return parseFloat(value[0]);
     });
+  };
+}
+
+if (!String.prototype.getVovels) {
+  String.prototype.getVovels = function () {
+    return this.split('').filter((letter) => vovels.includes(letter));
+  };
+}
+
+if (!String.prototype.getConsonants) {
+  String.prototype.getConsonants = function () {
+    return this.split('').filter((letter) => consnants.includes(letter));
   };
 }

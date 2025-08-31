@@ -1,4 +1,5 @@
 import '../utils';
+import { debug, info, warn } from '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
@@ -14,15 +15,10 @@ initialize(__filename, async (part, input) => {
     destinationStart: number,
     range: number
   ) => {
-    console.log({
-      from,
-      destinationStart,
-      range,
-      offset: destinationStart - from
-    });
+    info({ from, destinationStart, range, offset: destinationStart - from });
     return (v: number) => {
       if (v >= from && v < from + range) {
-        console.log({ from, destinationStart, range });
+        info({ from, destinationStart, range });
         return v + (destinationStart - from);
       }
       return null;
@@ -51,10 +47,10 @@ initialize(__filename, async (part, input) => {
       : [];
 
     for (const row of items) {
-      const [from, to, range] = row.split(' ').map((v) => parseInt(v, 10));
+      const [to, from, range] = row.split(' ').map((v) => parseInt(v, 10));
 
       // Destination processing
-      console.log({ source, destination });
+      info({ source, destination });
       lookup[source][destination].push(makeMapper(from, to, range));
     }
   }
@@ -73,18 +69,59 @@ initialize(__filename, async (part, input) => {
   const convertAll = (n: number) => {
     let currentN = n;
     for (let i = 1; i < conversions.length; i++) {
-      console.log('Before', [conversions[i - 1], conversions[i], currentN]);
+      debug('Before', [conversions[i - 1], conversions[i], currentN]);
       currentN = convert(conversions[i - 1], conversions[i], currentN);
-      console.log('After', [conversions[i - 1], conversions[i], currentN]);
-      console.log('--');
+      warn('After', [conversions[i - 1], conversions[i], currentN]);
+      debug('--');
     }
     return currentN;
   };
-  console.log(seeds);
-  // return seeds.map(convertAll).reduce((a, b) => Math.min(a, b), Number.POSITIVE_INFINITY);
+  info(seeds);
+  if (part == 1) {
+    return seeds
+      .map(convertAll)
+      .reduce((a, b) => Math.min(a, b), Number.POSITIVE_INFINITY);
+  }
 
-  console.log(convertAll(14));
-  // return seeds.map((seed) => convertAll(seed));
+  const seedPairs = seeds.reduce(
+    (result, value, index, array) => {
+      if (index % 2 === 0)
+        result.push(array.slice(index, index + 2) as [number, number]);
+      return result;
+    },
+    [] as [number, number][]
+  );
+
+  // for (const [seedStart, rangeSize] of seedPairs) {
+  //   for (let range = 0; range < rangeSize; range++) {
+  //     const seed = seedStart + range;
+  //     let value = seed;
+  //     // Ticker
+  //     if (seed % 100000 == 0) {
+  //       console.log(`[Tick ${seedStart} / ${seed} ${range / rangeSize}`);
+  //     }
+  //     for (const [source, destination] of maps.values().toArray().pairwise()) {
+  //       // Logic
+  //       const { offset } =
+  //         lookup[source][destination].find(
+  //           (range) => range.source.start <= value && range.source.end >= value
+  //         ) ?? { offset: 0 }!;
+  //       const end = value + offset;
+  //       value = end;
+
+  //       if (destination == 'location' && minLocation > end) {
+  //         console.log({
+  //           msg: 'New seed with min location',
+  //           minLocation,
+  //           end,
+  //           seed
+  //         });
+  //         minLocation = end;
+  //         minSeed = seed;
+  //       }
+  //     }
+  //   }
+  // }
 }).tests(
   `seeds: 79 14 55 13
 
@@ -119,5 +156,6 @@ temperature-to-humidity map:
 humidity-to-location map:
 60 56 37
 56 93 4`.split('\n'),
-  '1'
+  '35',
+  46
 );

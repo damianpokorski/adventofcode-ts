@@ -12,7 +12,9 @@
   "editor.detectIndentation": false,
   "editor.autoIndent": "advanced",
   "editor.insertSpaces": true,
-  "editor.rulers": [80],
+  "editor.rulers": [
+    80
+  ],
   // No sideways scrolling
   "editor.wordWrap": "on",
   // Hide gitignored files from explorer, you should have them
@@ -42,5 +44,8 @@
   "bun.test.filePattern": "**/*{.test.,.spec.,_test_,_spec_}{js,ts,tsx,jsx,mts,cts}",
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
   }
 }
