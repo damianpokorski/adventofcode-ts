@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@types/terminal-kit": "^2.5.6",
+    "bun": "^1.2.21",
     "just-modulo": "^2.2.0",
     "obliterator": "^2.0.4",
     "priority-queue-typescript": "^2.0.3",
