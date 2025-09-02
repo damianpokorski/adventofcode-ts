@@ -32,6 +32,7 @@ initialize(__filename, async (part, input, opts) => {
   if (opts.isTest) {
     return -1;
   }
+
   for (let noun = 0; noun < 100; noun++) {
     for (let verb = 0; verb < 100; verb++) {
       if (compute([...raw], noun, verb) == 19690720) {

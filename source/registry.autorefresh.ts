@@ -14,5 +14,6 @@ writeFileSync(
     encoding: 'utf-8'
   }
 );
-
-console.log('Updated ./source/solvers/index.ts with new content');
+if (process.argv.includes('--verbose')) {
+  console.log('Updated ./source/solvers/index.ts with new content');
+}

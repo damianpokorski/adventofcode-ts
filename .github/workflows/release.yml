@@ -5,7 +5,9 @@ on:
     branches: main
 
 permissions:
-  contents: read
+    contents: write
+    issues: write
+    pull-requests: write
 
 jobs:
   release:
@@ -29,5 +31,19 @@ jobs:
       - run: npm ci
         working-directory: .
 
-      - run: npm run start:bun
+      - run: |
+          echo "```" > report.md
+          npm run start:bun | tail -n +4 | tee -a report.md
+          echo "```" >> report.md
         working-directory: .
+          
+      # - name: "🏷️ Push tag"
+      #   uses: EndBug/latest-tag@latest
+      #   with:
+      #     force-branch: true
+
+      - uses: ncipollo/release-action@98d25d4189e9b6cee19b8635b1ea5cc39c158a41
+        with:
+          tag: v0-${{ github.sha }}
+          artifacts: "report.md"
+          bodyFile: "report.md"
