@@ -13,7 +13,7 @@
   "editor.autoIndent": "advanced",
   "editor.insertSpaces": true,
   "editor.rulers": [
-    80
+    120
   ],
   // No sideways scrolling
   "editor.wordWrap": "on",
