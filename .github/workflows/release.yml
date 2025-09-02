@@ -5,7 +5,9 @@ on:
     branches: main
 
 permissions:
-  contents: read
+    contents: write
+    issues: write
+    pull-requests: write
 
 jobs:
   release:
@@ -29,5 +31,23 @@ jobs:
       - run: npm ci
         working-directory: .
 
-      - run: npm run start:bun
+      - run: |
+          npm run start -- --markdown | grep -vE 'Skipped' | tail -n +4 | tee -a report.md
         working-directory: .
+          
+      - name: Delete tag
+        run: gh release delete latest --cleanup-tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "🏷️ Push tag"
+        uses: EndBug/latest-tag@c24a76ea69bf06f7f0e43a48b61c2b51b99d6c42
+        with:
+          force-branch: true
+
+      - uses: ncipollo/release-action@98d25d4189e9b6cee19b8635b1ea5cc39c158a41
+        with:
+          tag: latest
+          artifacts: "report.md"
+          bodyFile: "report.md"
+          removeArtifacts: true

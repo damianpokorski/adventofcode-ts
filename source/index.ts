@@ -1,5 +1,5 @@
-import { cpSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { Argument, Option, program } from 'commander';
+import { cpSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { terminal } from 'terminal-kit';
 import './solvers';
 import {
@@ -63,12 +63,18 @@ export const command = (command: string[]) => {
         'Adds extra infoging flag to the puzzle solvers'
       ).default(false)
     )
+    .addOption(
+      new Option(
+        '--markdown',
+        'Outputs markdown table instead of nice terminal table'
+      ).default(false)
+    )
     .action(
       async (
         selectedYear: Years,
         selectedDay: Days,
         part: Part,
-        options: { testsRequired: boolean; verbose: boolean }
+        options: { testsRequired: boolean; verbose: boolean; markdown: boolean }
       ) => {
         // Flatter registry
         const puzzles = getRegistryItems((year, day) => {
@@ -153,7 +159,15 @@ export const command = (command: string[]) => {
             ]);
           }
         }
-
+        if (options.markdown) {
+          for (let i = 0; i < table.length; i++) {
+            if (i == 1) {
+              console.log(`|${table[i].map((x) => '---').join('|')}|`);
+            }
+            console.log(`|${table[i].join('|')}|`);
+          }
+          return;
+        }
         terminal.table(
           table.map((row, index) => {
             // Empty repeated cells

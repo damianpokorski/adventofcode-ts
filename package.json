@@ -3,12 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "update:registry": "ts-node ./source/registry.autorefresh.ts",
+    "update:registry": "bun ./source/registry.autorefresh.ts",
     "prestart": "npm run update:registry",
-    "start": "ts-node ./source/index.ts",
-    "start:bun": "bun run prestart && bun ./source/index.ts",
-    "start:bun:watch": "bun run prestart && bun --watch ./source/index.ts",
-    "lint:prettier": "prettier --config .prettierrc 'source/**/*.ts' --write",
+    "start": "bun run prestart && bun ./source/index.ts",
+    "start:watch": "clear && bun run prestart && bun --watch ./source/index.ts",
     "lint": "npm run update:registry && npx @biomejs/biome check .",
     "lint:fix": "npm run lint -- --write"
   },
@@ -17,22 +15,14 @@
   "description": "",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@swc/core": "^1.9.3",
-    "@swc/helpers": "^0.5.15",
-    "@swc/jest": "^0.2.37",
-    "commander": "^12.1.0",
-    "regenerator-runtime": "^0.14.1",
-    "terminal-kit": "^3.1.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
-  },
-  "dependencies": {
+    "@types/node": "^24.3.0",
     "@types/terminal-kit": "^2.5.6",
     "bun": "^1.2.21",
-    "just-modulo": "^2.2.0",
+    "commander": "^12.1.0",
     "obliterator": "^2.0.4",
     "priority-queue-typescript": "^2.0.3",
+    "terminal-kit": "^3.1.1",
     "typescript-collections": "^1.3.3",
-    "typescript-memoize": "^1.1.1"
+    "typescript": "^5.7.2"
   }
 }

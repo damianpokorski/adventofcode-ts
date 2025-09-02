@@ -167,9 +167,11 @@ export const executeTest = async (
     if (testResult == expectedResult) {
       return true;
     }
-    console.log(
-      `${year} / ${day} - Test failed - expected ${expectedResult} received ${testResult}`
-    );
+    if (opts.verbose) {
+      console.log(
+        `${year} / ${day} - Test failed - expected ${expectedResult} received ${testResult}`
+      );
+    }
     return false;
   }
   return undefined;
