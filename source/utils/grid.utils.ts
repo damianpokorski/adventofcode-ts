@@ -24,6 +24,19 @@ export class Grid<T extends object | string | number | boolean> {
     return this.array.flat().find(predicate);
   }
 
+  filter(predicate: (cell: T) => boolean) {
+    return this.array.flat().filter(predicate);
+  }
+
+  get(x: number, y: number) {
+    return this.array[y][x];
+  }
+
+  set(x: number, y: number, value: T) {
+    this.array[y][x] = value;
+    return this;
+  }
+
   findLocationOf(predicate: (cell: T) => boolean): Vector | undefined {
     for (let y = 0; y < this.array.length; y++) {
       for (let x = 0; x < this.array[y].length; x++) {

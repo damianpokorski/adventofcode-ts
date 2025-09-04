@@ -130,6 +130,24 @@ export class Vector {
     return this.x == 0 && this.y !== 0;
   }
 
+  isOrthogonal() {
+    return this.isHorizontal() || this.isVertical();
+  }
+
+  isDiagonal() {
+    return this.isOrthogonal() == false && Math.abs(this.x) == Math.abs(this.y);
+  }
+
+  min(other: Vector) {
+    return new Vector(Math.min(this.x, other.x), Math.min(this.y, other.y));
+  }
+  max(other: Vector) {
+    return new Vector(Math.max(this.x, other.x), Math.max(this.y, other.y));
+  }
+  ceil() {
+    return new Vector(Math.round(this.x), Math.round(this.y));
+  }
+
   toFacing(other: Vector) {
     return (
       {
@@ -139,6 +157,11 @@ export class Vector {
         [Vector.Right.toString()]: VectorFacing.R
       }[this.subtract(other).toString()] ?? undefined
     );
+  }
+
+  distance(other: Vector): number {
+    const { x, y } = this.subtract(other);
+    return Math.sqrt(x * x + y * y);
   }
 
   gridDistance(other: Vector): number {
