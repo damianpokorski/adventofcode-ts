@@ -28,6 +28,7 @@ import './202409';
 import './201805';
 import './202204';
 import './202416';
+import './202205';
 import './202302';
 import './201604';
 import './202304';

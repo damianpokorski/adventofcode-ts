@@ -4,15 +4,18 @@ import { terminal } from 'terminal-kit';
 import './solvers';
 import {
   type Days,
-  type Part,
-  type Years,
   error,
   executeTest,
   getRegistryItems,
   info,
-  silence
+  type Part,
+  silence,
+  type Years
 } from './utils';
+
 export * from './utils/registry';
+
+import { $ } from 'bun';
 export const command = (command: string[]) => {
   return program
     .name('adventofcode')
@@ -102,6 +105,8 @@ export const command = (command: string[]) => {
             info(
               `Created a new placeholder entry for missing puzzle & empty puzzle file`
             );
+            // Run prestart file - which adds missing import - which triggers a refresh if you're in watch mode
+            await $`npm run prestart`;
           }
         }
 

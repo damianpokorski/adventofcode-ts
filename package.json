@@ -15,6 +15,7 @@
   "description": "",
   "devDependencies": {
     "@biomejs/biome": "2.2.2",
+    "@types/bun": "^1.2.21",
     "@types/node": "^24.3.0",
     "@types/terminal-kit": "^2.5.6",
     "bun": "^1.2.21",
