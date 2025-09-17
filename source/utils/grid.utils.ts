@@ -82,4 +82,12 @@ export class Grid<T extends object | string | number | boolean> {
       )
     );
   }
+
+  *iterate() {
+    for (let y = 0; y < this.array.length; y++) {
+      for (let x = 0; x < this.array[y].length; x++) {
+        yield [new Vector(x, y), this.array[y][x]] as [Vector, T];
+      }
+    }
+  }
 }

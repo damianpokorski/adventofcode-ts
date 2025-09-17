@@ -59,7 +59,7 @@ export const wrapLog = (color: string, ...data: unknown[]) => {
   if (isSilenced) {
     return;
   }
-  console.log(`${color}%s\x1b[0m`, ...data);
+  console.log(`${color}%s\x1b[0m`, JSON.stringify(data));
 };
 
 export const debug = (...data: unknown[]) =>

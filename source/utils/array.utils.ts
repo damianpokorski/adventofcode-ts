@@ -26,6 +26,11 @@ declare global {
     sum<T extends number>(): T;
 
     /**
+     * Counts entries matching predicate
+     */
+    count<T>(predicate: (arg0: T) => boolean): number;
+
+    /**
      * Groups object into a hashmap of arrays
      * @param keyGenerator - generates a key to be used in a dashmap
      */
@@ -38,11 +43,18 @@ declare global {
     ): [U, T[]][];
 
     /**
-     * Returns array result in form of pairs, i.e. for:
+     * Returns array result in form of pairs, e.g.
      * [1,2,3,4,5]
      * [[1,2], [2,3], [3,4], [4,5]]
      */
     pairwise(): [T, T][];
+
+    /**
+     * Converts arrays to set of pairs e.g.
+     * [1,2,3,4,5]
+     * [[1,2], [3,4], [5, undefined]]
+     */
+    toPairs(): [T, T | undefined][];
 
     consoleLogItems(message?: string | null): T[];
 
@@ -116,6 +128,17 @@ if (!Array.prototype.sum) {
   };
 }
 
+if (!Array.prototype.count) {
+  Array.prototype.count = function <T>(predicate: (arg0: T) => boolean) {
+    let counter = 0;
+    for (let i = 0; i < this.length; i++) {
+      if (predicate(this[i])) {
+        counter++;
+      }
+    }
+    return counter;
+  };
+}
 if (!Array.prototype.fromStringToNumberArray) {
   Array.prototype.fromStringToNumberArray = function () {
     return this.map((value) => parseInt(value)) as number[];
@@ -147,12 +170,23 @@ if (!Array.prototype.groupByToEntries) {
     return Object.entries(this.groupBy(keyGenerator)) as [U, T[]][];
   };
 }
+
 if (!Array.prototype.pairwise) {
   Array.prototype.pairwise = function <T>(): [T, T][] {
     return this.map((_, index) => [this[index - 1], this[index]]).slice(1) as [
       T,
       T
     ][];
+  };
+}
+
+if (!Array.prototype.toPairs) {
+  Array.prototype.toPairs = function <T>(): [T, T | undefined][] {
+    return this.map((_, index, set) =>
+      index % 2 == 0
+        ? ([set[index], set[index + 1]] as [T, T | undefined])
+        : undefined
+    ).filter((x) => x !== undefined);
   };
 }
 
