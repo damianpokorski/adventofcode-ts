@@ -18,8 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        name: "⏬ Checkout code"
 
-      - name: Use Node.js
+      - name: "🟢 Use Node.js"
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version-file: '.nvmrc'
@@ -28,14 +29,17 @@ jobs:
             package-lock.json
             examples/express/package-lock.json
 
-      - run: npm ci
+      - name: "⏬ Install dependencies"
+        run: npm ci
         working-directory: .
-
-      - run: |
-          npm run start -- --markdown | grep -vE 'Skipped' | tail -n +4 | tee -a report.md
+        
+      - name: "📝 Prepare summary"
+        run: |
+          npm run start -- --markdown | grep -vE 'Skipped' | tail -n +4 | grep "Total stars" -A10000 > report.md
+          cat report.md
         working-directory: .
           
-      - name: Delete tag
+      - name: "🗑️ Delete previous tag"
         run: gh release delete latest --cleanup-tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,8 +50,11 @@ jobs:
           force-branch: true
 
       - uses: ncipollo/release-action@98d25d4189e9b6cee19b8635b1ea5cc39c158a41
+        name: "📝 Save test summary as release notes"
         with:
           tag: latest
           artifacts: "report.md"
           bodyFile: "report.md"
           removeArtifacts: true
+          makeLatest: true
+          name: "Advent of code progression status"

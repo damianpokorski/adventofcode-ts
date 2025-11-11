@@ -21,6 +21,7 @@ import './201802';
 import './201803';
 import './201804';
 import './201805';
+import './201806';
 import './201901';
 import './201902';
 import './201903';

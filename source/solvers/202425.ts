@@ -3,6 +3,11 @@ import '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
+  // Free pass if you've done all previous challenges
+  if (part == 2) {
+    return '.';
+  }
+
   const keysAndLocks = input
     .join('\n')
     .split('\n\n')
@@ -80,5 +85,6 @@ initialize(__filename, async (part, input) => {
 #.#..
 #.#.#
 #####`.split('\n'),
-  3
+  3,
+  '.'
 );

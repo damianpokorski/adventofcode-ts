@@ -66,6 +66,10 @@ export class Vector {
   static fromSingle(value: number) {
     return new Vector(value, value);
   }
+
+  static fromTuples(values: [number, number][]) {
+    return values.map(([x, y]) => Vector.from(x, y));
+  }
   toChar() {
     if (this.equals(Vector.Up)) {
       return '^';

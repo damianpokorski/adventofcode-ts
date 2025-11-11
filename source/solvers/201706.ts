@@ -23,6 +23,7 @@ initialize(__filename, async (part, input) => {
     return memory;
   };
   const hashFn = (memory: number[]) => memory.join('/');
+
   // Keep redistributing until we find a mash
   const uniques = new Set([hashFn(banks)]);
   while (true) {

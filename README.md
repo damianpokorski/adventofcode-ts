@@ -1,4 +1,4 @@
-An unnecessarily complicated workbench for running advent of code puzzles.
+An over engineered project for running advent of code puzzles with minimal effort :) 
 
 ```sh
 npm run start -- --help
@@ -24,3 +24,5 @@ Rules broken so far - just for fun :) :
 
 - ✅ Global objects & states - using some of them to hook in puzzle & test data 'registration'
 - ✅ Utility functions & global class extensions - just cause i want to be able to do `[1,2,3].sum()` etc.
+
+❌ No AI was used in this project, it ruins the fun 

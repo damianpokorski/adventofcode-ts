@@ -165,9 +165,33 @@ export const command = (command: string[]) => {
           }
         }
         if (options.markdown) {
+          const starCounters = table
+            .slice(1)
+            .groupByToEntries((value) => value[0])
+            .map(
+              ([year, values]) =>
+                [
+                  year,
+                  values
+                    .map((result) => (result.includes('Skipped') ? 0 : 1))
+                    .sum()
+                ] as [string, number]
+            );
+          console.log(
+            `Total stars: ${starCounters.map(([_, stars]) => stars).sum()}`
+          );
+          console.log(
+            starCounters
+              .map(
+                ([year, stars]) =>
+                  `${year}: ${stars} stars \n ${''.padEnd(stars, '⭐')}`
+              )
+              .join('\n')
+          );
+          console.log('\n');
           for (let i = 0; i < table.length; i++) {
             if (i == 1) {
-              console.log(`|${table[i].map((x) => '---').join('|')}|`);
+              console.log(`|${table[i].map(() => '---').join('|')}|`);
             }
             console.log(`|${table[i].join('|')}|`);
           }

@@ -57,6 +57,15 @@ export class Grid<T extends object | string | number | boolean> {
     return output;
   }
 
+  isEdge(vector: Vector) {
+    return (
+      vector.x == 0 ||
+      vector.y == 0 ||
+      vector.x == this.array[0].length - 1 ||
+      vector.y == this.array.length - 1
+    );
+  }
+
   static createAndFill<T extends object | string | number | boolean>(
     x: number,
     y: number,
