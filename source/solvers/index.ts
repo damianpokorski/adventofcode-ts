@@ -33,6 +33,7 @@ import './202002';
 import './202003';
 import './202004';
 import './202005';
+import './202006';
 import './202101';
 import './202102';
 import './202103';
