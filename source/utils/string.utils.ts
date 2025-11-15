@@ -28,6 +28,7 @@ declare global {
     swapSpelledOutDigitsToNumbers(): string;
 
     hasNumber(): boolean;
+    isNumber(): boolean;
 
     /**
      * Extracts numeric values from string, i.e. -5.19, 3.14, 5, 500, 0.00001 etc.
@@ -80,6 +81,12 @@ if (!String.prototype.swapSpelledOutDigitsToNumbers) {
       nine: '9',
       zero: '0'
     });
+  };
+}
+
+if (!String.prototype.isNumber) {
+  String.prototype.isNumber = function () {
+    return this !== '' && Number.isFinite(Number(this));
   };
 }
 
