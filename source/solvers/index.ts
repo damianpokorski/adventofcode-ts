@@ -39,6 +39,7 @@ import './202102';
 import './202103';
 import './202104';
 import './202105';
+import './202106';
 import './202201';
 import './202202';
 import './202203';
