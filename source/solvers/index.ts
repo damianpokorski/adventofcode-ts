@@ -51,6 +51,7 @@ import './202302';
 import './202303';
 import './202304';
 import './202305';
+import './202306';
 import './202401';
 import './202402';
 import './202403';
