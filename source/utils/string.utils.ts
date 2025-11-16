@@ -37,6 +37,8 @@ declare global {
 
     getVovels(): string[];
     getConsonants(): string[];
+
+    windows(length: number): Generator<string, void, unknown>;
   }
 }
 
@@ -117,5 +119,16 @@ if (!String.prototype.getVovels) {
 if (!String.prototype.getConsonants) {
   String.prototype.getConsonants = function () {
     return this.split('').filter((letter) => consnants.includes(letter));
+  };
+}
+
+if (!String.prototype.windows) {
+  String.prototype.windows = function* (substrLength: number) {
+    for (let i = 0; i <= this.length - (substrLength - 1); i++) {
+      const slice = this.slice(i, i + substrLength);
+      if (slice.length == substrLength) {
+        yield slice;
+      }
+    }
   };
 }
