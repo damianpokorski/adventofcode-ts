@@ -34,7 +34,8 @@ export const command = (command: string[]) => {
           '2021',
           '2022',
           '2023',
-          '2024'
+          '2024',
+          '2025'
         ])
         .argOptional()
     )
@@ -182,6 +183,7 @@ export const command = (command: string[]) => {
           );
           console.log(
             starCounters
+              .reverse()
               .map(
                 ([year, stars]) =>
                   `${year}: ${stars} stars \n ${''.padEnd(stars, '⭐')}`
