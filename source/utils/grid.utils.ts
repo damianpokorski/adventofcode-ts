@@ -1,5 +1,18 @@
 import { Vector } from './vector.utils';
 
+const directions = [
+  // Up down left right
+  { x: 0, y: -1 },
+  { x: 0, y: 1 },
+  { x: -1, y: 0 },
+  { x: 1, y: 0 },
+  // Diagonals clockwise, starting top right
+  { x: 1, y: -1 },
+  { x: 1, y: 1 },
+  { x: -1, y: 1 },
+  { x: -1, y: -1 }
+];
+
 /* eslint-disable @typescript-eslint/prefer-for-of */
 export class Grid<T extends object | string | number | boolean> {
   constructor(public array: T[][]) {}
@@ -99,4 +112,12 @@ export class Grid<T extends object | string | number | boolean> {
       }
     }
   }
+
+  getAdjacent = (offsetX = 0, offsetY = 0) => {
+    return directions
+      .map(
+        (offset) => (this.array[offsetY + offset.y] ?? [])[offsetX + offset.x]
+      )
+      .filter((x) => x !== undefined);
+  };
 }
