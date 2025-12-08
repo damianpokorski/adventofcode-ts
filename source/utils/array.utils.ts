@@ -84,6 +84,8 @@ declare global {
 
     combinations(size: number): Obliterated<T[]>;
     permutations(size: number): Obliterated<T[]>;
+
+    transpose(): T[];
   }
 
   interface String {
@@ -267,6 +269,14 @@ if (!Array.prototype.combinations) {
 if (!Array.prototype.permutations) {
   Array.prototype.permutations = function <T>(size: number): Obliterated<T[]> {
     return obliterated(permutations<T>(this, size));
+  };
+}
+
+if (!Array.prototype.transpose) {
+  Array.prototype.transpose = function <T>(): T {
+    return this[0].map((_: T[], colIndex: number) =>
+      this.map((row) => row[colIndex])
+    ) as T;
   };
 }
 

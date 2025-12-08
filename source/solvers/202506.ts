@@ -24,21 +24,16 @@ initialize(__filename, async (part, input) => {
     );
 
   // Transpose columns and rows
-  let columns = values[0].map((_, colIndex) =>
-    values.map((row) => row[colIndex])
-  );
+  let columns = values.transpose();
 
   // Transpose strings within columns as they are - including whitespace
   if (part == 2) {
     columns = columns.map((column) => {
-      const maxLength = Math.max(...column.map((v) => v.toString().length));
-      const padded = column.map((v) =>
-        v.toString().padEnd(maxLength, ' ').split('')
-      );
-      const paddedTransposed = padded[0]
-        .map((_, colIndex) => padded.map((row) => row[colIndex]))
+      const maxLength = Math.max(...column.map((v) => v.length));
+      return column
+        .map((v) => v.padEnd(maxLength, ' ').split(''))
+        .transpose()
         .map((v) => v.join('').trim());
-      return paddedTransposed;
     });
   }
 
