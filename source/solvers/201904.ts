@@ -2,7 +2,7 @@ import '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
-  const [min, max] = input.join('').split('-').fromStringToNumberArray();
+  const [min, max] = input.join('').split('-').asNumbers();
   let valid = 0;
   for (let i = min; i <= max; i++) {
     // Minor perf boost, skips 100000 - 111111, 200000 - 222222 etc.
@@ -15,7 +15,7 @@ initialize(__filename, async (part, input) => {
     //   console.log({ after: i });
     // }
 
-    const str = i.toString().split('').fromStringToNumberArray();
+    const str = i.toString().split('').asNumbers();
     // Group by digits
     const groups = str.groupByToEntries((digit) => digit);
     // Check if it's consecutively going up

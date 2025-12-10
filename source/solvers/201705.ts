@@ -3,7 +3,7 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   // Part 1
-  const memory = input.fromStringToNumberArray();
+  const memory = input.asNumbers();
   let index = 0;
   let counter = 0;
   while (index >= 0 && index < memory.length) {

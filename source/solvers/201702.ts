@@ -3,7 +3,7 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   return input
-    .map((line) => line.split(/\s+/).fromStringToNumberArray())
+    .map((line) => line.split(/\s+/).asNumbers())
     .map((cells) => {
       // Part 1 - Diff of max & mix
       if (part == 1) {

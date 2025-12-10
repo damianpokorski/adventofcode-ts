@@ -80,7 +80,7 @@ declare global {
     ): U[];
 
     // Had enough writing map -> parseInt
-    fromStringToNumberArray(): number[];
+    asNumbers(): number[];
 
     combinations(size: number): Obliterated<T[]>;
     permutations(size: number): Obliterated<T[]>;
@@ -141,8 +141,8 @@ if (!Array.prototype.count) {
     return counter;
   };
 }
-if (!Array.prototype.fromStringToNumberArray) {
-  Array.prototype.fromStringToNumberArray = function () {
+if (!Array.prototype.asNumbers) {
+  Array.prototype.asNumbers = function () {
     return this.map((value) => parseInt(value)) as number[];
   };
 }

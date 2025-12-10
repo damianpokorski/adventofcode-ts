@@ -6,7 +6,7 @@ initialize(__filename, async (part, input, options) => {
   const part2maxDistance = options.isTest ? 32 : 10000;
   // Parse input
   const locations = input.map(
-    (line) => line.split(', ').fromStringToNumberArray() as [number, number]
+    (line) => line.split(', ').asNumbers() as [number, number]
   );
   const locationVectors = Vector.fromTuples(locations);
 

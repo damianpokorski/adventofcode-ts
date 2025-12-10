@@ -3,7 +3,7 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   return input
-    .map((line) => line.split('x').fromStringToNumberArray())
+    .map((line) => line.split('x').asNumbers())
     .map(([l, w, h]) => {
       // Wrapping paper
       if (part == 1) {

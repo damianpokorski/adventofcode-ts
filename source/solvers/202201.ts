@@ -5,7 +5,7 @@ initialize(__filename, async (part, input) => {
   return input
     .join('\n')
     .split('\n\n')
-    .map((elf) => elf.split('\n').fromStringToNumberArray().sum())
+    .map((elf) => elf.split('\n').asNumbers().sum())
     .sort((a, b) => b - a)
     .slice(0, part == 1 ? 1 : 3)
     .sum();

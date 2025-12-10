@@ -8,8 +8,8 @@ initialize(__filename, async (part, input) => {
       line.replaceAll(/[#@:]/g, '').replaceAll(/\s+/g, ' ').split(' ')
     )
     .map(([id, xy, wh]) => {
-      const [x, y] = xy.split(',').fromStringToNumberArray();
-      const [w, h] = wh.split('x').fromStringToNumberArray();
+      const [x, y] = xy.split(',').asNumbers();
+      const [w, h] = wh.split('x').asNumbers();
       const cells = [] as Vector[];
 
       for (let _w = 0; _w < w; _w++) {

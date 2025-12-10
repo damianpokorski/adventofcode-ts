@@ -5,8 +5,8 @@ initialize(__filename, async (part, input) => {
   // Part 1 process columns individually, part 2 - treat them as 1 big number
   const [times, records] = input.map((line) =>
     part == 1
-      ? line.split(/\s+/).slice(1).fromStringToNumberArray()
-      : [line.split(/\s+/).slice(1).join('')].fromStringToNumberArray()
+      ? line.split(/\s+/).slice(1).asNumbers()
+      : [line.split(/\s+/).slice(1).join('')].asNumbers()
   );
   const pairs = times.map(
     (t, index) => [t, records[index]] as [number, number]

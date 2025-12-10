@@ -4,7 +4,7 @@ import { initialize } from '../utils/registry';
 initialize(__filename, async (part, input) => {
   return (
     input
-      .fromStringToNumberArray()
+      .asNumbers()
       // Map each row to sets - either sets of 2 or sets of 3, ignore invalid sets
       .map((_, i, array) => array.slice(i - +part, i + 1))
       .filter((window) => window.length > 0)

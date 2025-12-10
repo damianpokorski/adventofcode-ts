@@ -42,7 +42,7 @@ initialize(__filename, async (part, input) => {
     .map((column, index) =>
       column
         .map((x) => x.trim())
-        .fromStringToNumberArray()
+        .asNumbers()
         .reduce((a, b) => {
           return operations[index] == '*' ? a * b : a + b;
         })

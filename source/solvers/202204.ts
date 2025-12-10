@@ -5,9 +5,7 @@ initialize(__filename, async (part, input) => {
   return input
     .map(
       (line) =>
-        line
-          .split(',')
-          .flatMap((elf) => elf.split('-').fromStringToNumberArray()) as [
+        line.split(',').flatMap((elf) => elf.split('-').asNumbers()) as [
           number,
           number,
           number,

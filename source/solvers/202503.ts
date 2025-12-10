@@ -3,7 +3,7 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
   return input
-    .map((line) => line.split('').fromStringToNumberArray())
+    .map((line) => line.split('').asNumbers())
     .map((batteries, index) => {
       if (part == 1) {
         let max = 0;

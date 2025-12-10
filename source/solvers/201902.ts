@@ -1,7 +1,8 @@
 import '../utils';
 import { initialize } from '../utils/registry';
+
 initialize(__filename, async (part, input, opts) => {
-  const raw = input.join('').split(',').fromStringToNumberArray();
+  const raw = input.join('').split(',').asNumbers();
 
   const compute = (digits: number[], noun: number, verb: number) => {
     digits[1] = noun;

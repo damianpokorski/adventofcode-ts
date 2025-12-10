@@ -4,9 +4,7 @@ import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input, { isTest }) => {
   const points = input
-    .map(
-      (line) => line.split(',').fromStringToNumberArray() as [number, number]
-    )
+    .map((line) => line.split(',').asNumbers() as [number, number])
     .map(([x, y]) => new Vector(x, y));
 
   // Polygon boundaries

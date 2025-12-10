@@ -4,7 +4,7 @@ import { initialize } from '../utils/registry';
 initialize(__filename, async (part, input) => {
   // Process input, get rid of pesky displicate whitespaces
   const data = input.map((line) =>
-    line.replaceAll(/\s+/g, ' ').trim().split(' ').fromStringToNumberArray()
+    line.replaceAll(/\s+/g, ' ').trim().split(' ').asNumbers()
   );
 
   // Part 2: Read in column of 3s rather than horizontally row by row

@@ -3,7 +3,7 @@ import { Vector } from '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input, opts) => {
-  const target = input.join().split(' ').fromStringToNumberArray().pop()!;
+  const target = input.join().split(' ').asNumbers().pop()!;
 
   // Spiral walker - constrained to square, basically reverse snake :)
   // Spiral direction doesnt matter for this problem either

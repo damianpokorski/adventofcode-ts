@@ -12,7 +12,7 @@ initialize(__filename, async (part, input) => {
   };
 
   return input
-    .fromStringToNumberArray()
+    .asNumbers()
     .map((x) => (part == 1 ? fuelCalc(x) : recursiveFuelCalc(x)))
     .sum();
 }).tests([`1969`, `100756`], 654 + 33583, 966 + 50346);

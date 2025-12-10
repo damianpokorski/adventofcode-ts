@@ -2,7 +2,7 @@ import '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
-  let banks = input[0].split('\t').fromStringToNumberArray();
+  let banks = input[0].split('\t').asNumbers();
 
   const process = (memory: number[]) => {
     // Find the first biggest bank

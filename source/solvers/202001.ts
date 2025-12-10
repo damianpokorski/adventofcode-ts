@@ -5,7 +5,7 @@ initialize(__filename, async (part, input) => {
   // Combination search for sum of items, mutliple individuals for final result
   // Cheekily using part 1 and 2, as base - as first part involves 2 items, while 2nd one involves 3
   return input
-    .fromStringToNumberArray()
+    .asNumbers()
     .combinations(+part + 1)
     .find((arr) => arr.sum() == 2020)!
     .reduce((a, b) => a * b, 1);

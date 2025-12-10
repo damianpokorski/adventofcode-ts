@@ -2,7 +2,7 @@ import '../utils';
 import { initialize } from '../utils/registry';
 
 initialize(__filename, async (part, input) => {
-  const raw = input.join('').split(',').fromStringToNumberArray();
+  const raw = input.join('').split(',').asNumbers();
 
   const compute = (memory: number[], input: number) => {
     const outputBuffer: number[] = [];
@@ -16,7 +16,7 @@ initialize(__filename, async (part, input) => {
 
       // Parse 4 digit opcode encoding
       const [modeParam3, modeParam2, modeParam1, opCodeLeft, opCodeRight] =
-        opCode.toString().padStart(5, '0').split('').fromStringToNumberArray();
+        opCode.toString().padStart(5, '0').split('').asNumbers();
       opCode = parseInt(`${opCodeLeft}${opCodeRight}`);
 
       const getMemory = (value: number, mode: number) =>

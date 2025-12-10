@@ -6,7 +6,7 @@ initialize(__filename, async (part, input) => {
   const pool = input
     .join('')
     .split(',')
-    .fromStringToNumberArray()
+    .asNumbers()
     .groupBy((value) => value);
 
   const group = [...new Array(9)].map((_, index) => pool[index]?.length ?? 0);

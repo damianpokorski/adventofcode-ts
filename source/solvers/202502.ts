@@ -21,9 +21,7 @@ initialize(__filename, async (part, input) => {
   const ranges = [...input]
     .shift()
     ?.split(',')
-    .map(
-      (range) => range.split('-').fromStringToNumberArray() as [number, number]
-    )!;
+    .map((range) => range.split('-').asNumbers() as [number, number])!;
 
   return ranges
     .map(([start, end]) => {

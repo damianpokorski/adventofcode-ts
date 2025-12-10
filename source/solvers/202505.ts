@@ -7,9 +7,9 @@ initialize(__filename, async (part, input) => {
     .split('\n\n')
     .map((set) => set.split('\n'));
   const fresh = freshRaw.map(
-    (line) => line.split('-').fromStringToNumberArray() as [number, number]
+    (line) => line.split('-').asNumbers() as [number, number]
   );
-  const available = availableRaw.fromStringToNumberArray();
+  const available = availableRaw.asNumbers();
 
   // Filtering entries to values that are in ranges
   if (part == 1) {

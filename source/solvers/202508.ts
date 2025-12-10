@@ -4,9 +4,7 @@ import { initialize } from '../utils/registry';
 initialize(__filename, async (part, input, opts) => {
   // Map input into tuples of 3
   type Vector3 = [number, number, number];
-  const boxes = input.map(
-    (line) => line.split(',').fromStringToNumberArray() as Vector3
-  );
+  const boxes = input.map((line) => line.split(',').asNumbers() as Vector3);
 
   // 3d distance calc
   const distance = ([[a1, a2, a3], [b1, b2, b3]]: [Vector3, Vector3]) =>

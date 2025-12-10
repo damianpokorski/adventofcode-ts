@@ -7,14 +7,12 @@ initialize(__filename, async (part, input) => {
     .join('\n')
     .replace(/ +/g, ' ')
     .split('\n\n');
-  const draws = drawsRaw.split(',').fromStringToNumberArray();
+  const draws = drawsRaw.split(',').asNumbers();
   const boards = boardsRaw
     .map(
       (b) =>
         new Grid(
-          b
-            .split('\n')
-            .map((line) => line.trim().split(' ').fromStringToNumberArray())
+          b.split('\n').map((line) => line.trim().split(' ').asNumbers())
         )
     )
     .map((grid, id) => ({
