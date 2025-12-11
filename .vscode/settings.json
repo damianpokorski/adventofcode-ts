@@ -49,6 +49,7 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "cSpell.words": [
+    "joltages",
     "LSHIFT",
     "RSHIFT"
   ]
