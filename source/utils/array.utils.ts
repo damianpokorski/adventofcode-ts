@@ -86,6 +86,7 @@ declare global {
     permutations(size: number): Obliterated<T[]>;
 
     transpose(): T[];
+    rotateClockwise(): T[];
   }
 
   interface String {
@@ -272,6 +273,22 @@ if (!Array.prototype.permutations) {
   };
 }
 
+if (!Array.prototype.transpose) {
+  Array.prototype.transpose = function <T>(): T {
+    return this[0].map((_: T[], colIndex: number) =>
+      this.map((row) => row[colIndex])
+    ) as T;
+  };
+}
+
+/**Only works for square arrays */
+if (!Array.prototype.rotateClockwise) {
+  Array.prototype.rotateClockwise = function <T>(): T {
+    return (this as T[][]).transpose().map((row) => row.reverse()) as T;
+  };
+}
+
+/**Only works for square arrays */
 if (!Array.prototype.transpose) {
   Array.prototype.transpose = function <T>(): T {
     return this[0].map((_: T[], colIndex: number) =>
