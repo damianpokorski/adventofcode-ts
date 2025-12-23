@@ -19,6 +19,7 @@
   "editor.wordWrap": "on",
   // Hide gitignored files from explorer, you should have them
   "explorer.excludeGitIgnore": true,
+  "window.commandCenter": false,
   // Inlay type hints -
   "editor.inlayHints.enabled": "on",
   "typescript.inlayHints.enumMemberValues.enabled": false,

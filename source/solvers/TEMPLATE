@@ -1,6 +1,6 @@
 import '../utils';
 import { initialize } from '../utils/registry';
 
-initialize(__filename, async (part, input) => {
+initialize(__filename, async (part, input, { isTest, verbose }) => {
   return ``;
 }).tests(``.split('\n'), 0);
