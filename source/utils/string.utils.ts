@@ -7,6 +7,7 @@ export const consnants = alphabet.filter(
 // String extensions
 declare global {
   interface String {
+    discard(...strings: string[]): string;
     massReplace(replaces: Record<string, string>): string;
 
     /**
@@ -83,6 +84,15 @@ if (!String.prototype.swapSpelledOutDigitsToNumbers) {
       nine: '9',
       zero: '0'
     });
+  };
+}
+
+if (!String.prototype.discard) {
+  String.prototype.discard = function (...strings: string[]) {
+    return strings.reduce(
+      (current, next) => current.replace(next, ''),
+      `${this}`
+    );
   };
 }
 
