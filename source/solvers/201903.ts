@@ -34,10 +34,9 @@ initialize(__filename, async (part, input) => {
   );
 
   // Find overlaps
-  const overlaps = Object.keys(pathA)
-    .values()
-    .filter((hash) => pathA[hash].index > 0 && pathB[hash] !== undefined)
-    .toArray();
+  const overlaps = Object.keys(pathA).filter(
+    (hash) => pathA[hash].index > 0 && pathB[hash] !== undefined
+  );
 
   // Convert overlaps to distance from 0,0, pick shortest
   return (

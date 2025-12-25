@@ -87,6 +87,8 @@ declare global {
 
     transpose(): T[];
     rotateClockwise(): T[];
+
+    range(start: number, end: number): number[];
   }
 
   interface String {
@@ -247,6 +249,7 @@ if (!Array.prototype.abortableMap) {
  * Extending array definitions with funky iterators :)
  */
 interface Obliterated<T> {
+  iterator: IterableIterator<T>;
   get: () => IntoInterator<T>;
   filter: (predicate: PredicateFunction<T>) => IterableIterator<T>;
   find: (predicate: PredicateFunction<T>) => T | undefined;
@@ -255,6 +258,7 @@ interface Obliterated<T> {
 
 const obliterated = <T>(it: IntoInterator<T>) => {
   return {
+    iterator: it,
     get: () => it,
     filter: (predicate: PredicateFunction<T>) => filter(it, predicate),
     find: (predicate: PredicateFunction<T>) => find(it, predicate),
@@ -306,5 +310,14 @@ if (!Array.prototype.consoleLogItems) {
       console.log(item);
       return item;
     });
+  };
+}
+
+/**Only works for square arrays */
+if (!Array.prototype.range) {
+  Array.prototype.range = (start, end) => {
+    const size = Math.max(start, end) - Math.min(start, end);
+    const offset = Math.max(start, end) - size;
+    return [...new Array(size)].map((_, index) => index + offset);
   };
 }

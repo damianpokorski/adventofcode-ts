@@ -30,6 +30,7 @@ declare global {
 
     hasNumber(): boolean;
     isNumber(): boolean;
+    asNumber(): number;
 
     /**
      * Extracts numeric values from string, i.e. -5.19, 3.14, 5, 500, 0.00001 etc.
@@ -140,5 +141,11 @@ if (!String.prototype.windows) {
         yield slice;
       }
     }
+  };
+}
+
+if (!String.prototype.asNumber) {
+  String.prototype.asNumber = function () {
+    return parseFloat(`${this}`);
   };
 }

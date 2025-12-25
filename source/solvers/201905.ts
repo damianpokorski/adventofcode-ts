@@ -1,10 +1,8 @@
 import '../utils';
-import { initialize } from '../utils/registry';
+import { initialize, type Part } from '../utils/registry';
 
-initialize(__filename, async (part, input) => {
-  const raw = input.join('').split(',').asNumbers();
-
-  const compute = (memory: number[], input: number) => {
+export const createProgram = (part: Part) =>
+  function* (memory: number[], input: () => number) {
     const outputBuffer: number[] = [];
     for (let i = 0; i < memory.length; ) {
       let [opCode, param1raw, param2raw, param3] = [
@@ -34,19 +32,18 @@ initialize(__filename, async (part, input) => {
           2: 4,
           3: 2,
           4: 2,
-          ...(part == 1
-            ? {}
-            : {
-                5: 0,
-                6: 0,
-                7: 4,
-                8: 4
-              })
+          // Part 2 201905
+          ...{
+            5: 0,
+            6: 0,
+            7: 4,
+            8: 4
+          }
         }[opCode] ?? 4);
 
       // Immediate halt
       if (opCode == 99) {
-        break;
+        return 0;
       }
       // Add, Multiply, Input, Store, Jump if not 0, Jump if 0, LT, EQ
       if (opCode == 1) {
@@ -54,9 +51,14 @@ initialize(__filename, async (part, input) => {
       } else if (opCode == 2) {
         memory[param3] = param1 * param2;
       } else if (opCode == 3) {
-        memory[param1raw] = input;
+        let value = input();
+        while (Number.isNaN(value) || value == undefined) {
+          yield `BLOCKED`;
+          value = input();
+        }
+        memory[param1raw] = value;
       } else if (opCode == 4) {
-        outputBuffer.push(param1);
+        yield param1;
       } else {
         if (part == 2) {
           if (opCode == 5) {
@@ -81,10 +83,19 @@ initialize(__filename, async (part, input) => {
         break;
       }
     }
-    return outputBuffer.length == 0 ? 0 : parseInt(outputBuffer.join(''));
+    return 0;
   };
-
-  return compute(raw, part == 1 ? 1 : 5);
+initialize(__filename, async (part, input) => {
+  const raw = input.join('').split(',').asNumbers();
+  const compute = createProgram(part);
+  const buffer: number[] = [];
+  for (const output of compute(raw, () => (part == 1 ? 1 : 5))) {
+    if (output == 'BLOCKED') {
+      break;
+    }
+    buffer.push(output);
+  }
+  return parseInt(buffer.join(''), 10);
 })
   .test(1, `3,0,4,0,99`.split('\n'), 1)
   .test(

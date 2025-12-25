@@ -32,7 +32,7 @@ initialize(__filename, async (part, input) => {
       steps.push(position);
       position = `${links[position]}`;
     }
-    return new Set([...steps.reverse()]).values().toArray();
+    return [...new Set([...steps.reverse()]).values()];
   };
   const a = path('YOU', 'COM');
   const b = path('SAN', 'COM');
